@@ -358,7 +358,15 @@ button,input,textarea,select{font:inherit;color:inherit}
   background:var(--accent);color:var(--on-accent);border-radius:999px;padding:3px 12px;
   font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;
 }
-.tier__price{display:flex;align-items:baseline;gap:8px;font-family:var(--display);font-size:2.5rem;font-weight:800;letter-spacing:-.03em;color:var(--ink-2)}
+.tier__price{display:flex;align-items:baseline;gap:8px;font-family:var(--display);font-size:2.5rem;font-weight:800;letter-spacing:-.03em;color:var(--ink)}
+.tier__rates{
+  list-style:none;margin:0;padding:12px 0;display:flex;flex-direction:column;gap:7px;
+  border-block:1px solid var(--line);font-family:var(--mono);font-size:.84rem;
+}
+.tier__rates li{display:flex;justify-content:space-between;gap:12px;color:var(--ink-2)}
+.tier__rates li::before{content:none;display:none}
+.tier__rates b{color:var(--ink);font-weight:500;font-variant-numeric:tabular-nums}
+.rate-note{color:var(--ink-2);font-size:.88rem;margin-top:18px}
 .tier__price em{font-style:normal;font-family:var(--mono);font-size:.78rem;font-weight:400;letter-spacing:.05em;text-transform:uppercase}
 .tier ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;font-size:.95rem;color:var(--ink-2)}
 .tier li{display:flex;gap:10px;align-items:flex-start}
@@ -691,16 +699,20 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
     <div class="head">
       <p class="eyebrow">Services &amp; pricing</p>
       <h2>Simple walks, honest rates</h2>
-      <p class="lede">Prices below are placeholders — swap in your real rates and the layout stays exactly as it is.</p>
-      <span class="tbc">Rates to be confirmed</span>
+      <p class="lede">Every walk includes door-to-door pick-up and drop-off, a towel-dry on the way home, and a photo and note before you're back. The first meet &amp; greet is free.</p>
     </div>
 
     <div class="tiers">
       <article class="tier">
         <h3>Solo walk</h3>
-        <div class="tier__price">$00 <em>per walk</em></div>
+        <div class="tier__price">$45 <em>from</em></div>
+        <ul class="tier__rates">
+          <li><span>30 minutes</span><b>$45</b></li>
+          <li><span>45 minutes</span><b>$55</b></li>
+          <li><span>60 minutes</span><b>$65</b></li>
+        </ul>
         <ul>
-          <li>30 or 45 minutes, one dog</li>
+          <li>One dog, one-on-one, start to finish</li>
           <li>Quiet routes for reactive or older dogs</li>
           <li>Door-to-door pick-up</li>
           <li>Photo and note after every walk</li>
@@ -710,10 +722,11 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
 
       <article class="tier tier--feature">
         <h3>Group walk</h3>
-        <div class="tier__price">$00 <em>per walk</em></div>
+        <div class="tier__price">$48 <em>per walk</em></div>
         <ul>
           <li>60 minutes, maximum six dogs</li>
           <li>Beach and reserve loops</li>
+          <li>The same small group each week, so your dog knows the others</li>
           <li>Towel-dry and fresh water on return</li>
           <li>Weekday mornings and early afternoons</li>
         </ul>
@@ -722,12 +735,13 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
 
       <article class="tier">
         <h3>Puppy drop-in</h3>
-        <div class="tier__price">$00 <em>per visit</em></div>
+        <div class="tier__price">$39 <em>per visit</em></div>
         <ul>
           <li>20 minutes, midday</li>
           <li>Toilet break, play and fresh water</li>
           <li>Under six months or post-surgery</li>
           <li>Same walker every visit</li>
+          <li>Photo and note before you're back</li>
         </ul>
         <a class="btn btn--ghost" href="#/about" data-route="/about">Enquire</a>
       </article>
@@ -742,14 +756,15 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
           <tr><th scope="col">Add-on</th><th scope="col">Detail</th><th scope="col">Price</th></tr>
         </thead>
         <tbody>
-          <tr><td>Weekly pack (5 walks)</td><td>Booked as a standing weekday slot</td><td>$00</td></tr>
-          <tr><td>Adventure walk</td><td>90 minutes, Long Bay or Ōkura bush track</td><td>$00</td></tr>
-          <tr><td>Extra dog, same household</td><td>Added to any walk</td><td>$00</td></tr>
-          <tr><td>Weekend walk</td><td>Saturday and Sunday, subject to space</td><td>$00</td></tr>
+          <tr><td>Weekly pack (5 walks)</td><td>Booked as a standing weekday slot</td><td>$215</td></tr>
+          <tr><td>Adventure walk</td><td>90 minutes, Long Bay or Ōkura bush track</td><td>$75</td></tr>
+          <tr><td>Extra dog, same household</td><td>Added to any walk</td><td>$30</td></tr>
+          <tr><td>Weekend walk</td><td>Saturday and Sunday, subject to space</td><td>$55</td></tr>
           <tr><td>Meet &amp; greet</td><td>30 minutes at your place before the first walk</td><td>Free</td></tr>
         </tbody>
       </table>
     </div>
+    <p class="rate-note">The weekly pack works out at $43 a walk, booked as the same five weekday slots each week. Add-ons are charged on top of the walk they're added to.</p>
 
     <div class="head" style="margin-top:56px">
       <h2 style="font-size:clamp(1.5rem,2.4vw,1.9rem)">Common questions</h2>

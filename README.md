@@ -77,13 +77,34 @@ The three newest approved photos also fill the home page hero collage.
 
 ## Status: still a wireframe in places
 
-Real layouts, real navigation, real contact details, and a real gallery. Still to
-do before it goes live:
+Real layouts, real navigation, real contact details, real rates, and a real
+gallery. Still to do before it goes live:
 
-- **Prices are placeholders.** Every rate reads `$00`.
 - **Hero photos.** The collage fills itself from approved dogs, but shows paw
   outlines until there are three.
 - **The About copy is scaffolding** — right shape, not the owner's own words.
+- **GST.** Prices are shown without any GST note. If the business registers for
+  GST, every rate on the services page needs "incl. GST" or a re-quote.
+
+## Rates
+
+Set 5 September 2026 from the Auckland market — Goodwalk, North Shore Dog
+Walking and Fido & Friends.
+
+| Service | Rate |
+|---|---|
+| Solo walk | $45 (30 min) · $55 (45 min) · $65 (60 min) |
+| Group walk, 60 min, max six dogs | $48 |
+| Puppy drop-in, 20 min | $39 |
+| Weekly pack, 5 walks | $215 ($43 a walk) |
+| Adventure walk, 90 min | $75 |
+| Extra dog, same household | $30 |
+| Weekend walk | $55 |
+| Meet & greet | Free |
+
+Solo rates match Goodwalk exactly. The group walk sits inside the $45–50 band
+North Shore operators charge. The free meet & greet is a deliberate
+differentiator — Fido & Friends charge $25 for theirs.
 
 ## On client photos
 
