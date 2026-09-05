@@ -1,22 +1,18 @@
 // Doggy Development — Firebase connection details.
 //
-// Paste the config object Firebase gives you when you register a web app
-// (SETUP.md step 3) between the braces below.
-//
 // These values are NOT secrets. Firebase web config is public by design — it
 // identifies your project, it doesn't grant access to it. What actually guards
 // your data is firestore.rules. It is fine that this file is in a public repo.
 //
-// Until you fill this in, the site runs in demo mode: the gallery shows the
-// example dogs and the upload form politely says it isn't connected yet.
+// From the Firebase console: Project settings → General → Your apps → website.
 
 export const firebaseConfig = {
-  // apiKey: "AIza...",
-  // authDomain: "your-project.firebaseapp.com",
-  // projectId: "your-project",
-  // storageBucket: "your-project.firebasestorage.app",
-  // messagingSenderId: "000000000000",
-  // appId: "1:000000000000:web:abcdef123456"
+  apiKey: "AIzaSyDxujsSwsa4dm-s8GAh6VTnwzCRLU5qRrU",
+  authDomain: "doggy-development.firebaseapp.com",
+  projectId: "doggy-development",
+  storageBucket: "doggy-development.firebasestorage.app",
+  messagingSenderId: "168985904685",
+  appId: "1:168985904685:web:7dde45a76c2da0dce61aa4"
 };
 
 export const isConfigured = Boolean(firebaseConfig && firebaseConfig.projectId);
