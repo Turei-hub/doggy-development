@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Doggy Development — logo concepts</title>
+<meta name="description" content="Four logo concepts for Doggy Development, with lockups, reversed versions and size tests.">
+<link rel="icon" href="logo-mark-teal.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,800&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F5F8F6; --surface:#FFFFFF; --surface-2:#EAF1EE;
+  --ink:#0F2420; --ink-2:#4C605B; --line:#D9E4E0; --line-strong:#C2D3CD;
+  --accent:#0F8F80; --accent-deep:#0A6D61; --accent-soft:#D8EEE9;
+  --warm:#D9552A; --warm-soft:#FAE2D8; --on-accent:#FFFFFF;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"Figtree","Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --r:18px;
+  --shadow:0 1px 2px rgba(15,36,32,.05), 0 14px 30px -16px rgba(15,36,32,.22);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0C1613; --surface:#14201D; --surface-2:#1B2A26;
+    --ink:#E7F0EC; --ink-2:#9BB0AA; --line:#25332F; --line-strong:#35443F;
+    --accent:#3FC9B6; --accent-deep:#2FA895; --accent-soft:#123531;
+    --warm:#FF8A5C; --warm-soft:#331E16; --on-accent:#06201C;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 30px -16px rgba(0,0,0,.75);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0C1613; --surface:#14201D; --surface-2:#1B2A26;
+  --ink:#E7F0EC; --ink-2:#9BB0AA; --line:#25332F; --line-strong:#35443F;
+  --accent:#3FC9B6; --accent-deep:#2FA895; --accent-soft:#123531;
+  --warm:#FF8A5C; --warm-soft:#331E16; --on-accent:#06201C;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 14px 30px -16px rgba(0,0,0,.75);
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.05;letter-spacing:-.025em;margin:0;text-wrap:balance}
+h1{font-size:clamp(2.1rem,5vw,3.2rem)}
+h2{font-size:clamp(1.5rem,3vw,2rem)}
+h3{font-size:1.15rem;font-weight:600;letter-spacing:-.01em}
+p{margin:0}
+.wrap{max-width:1040px;margin-inline:auto;padding-inline:clamp(20px,5vw,44px)}
+.eyebrow{font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.16em;color:var(--accent-deep)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .eyebrow{color:var(--accent)}}
+:root[data-theme="dark"] .eyebrow{color:var(--accent)}
+.lede{color:var(--ink-2);max-width:64ch}
+
+header.top{padding-block:clamp(44px,7vw,76px) 34px;display:flex;flex-direction:column;gap:14px}
+
+/* concept block */
+.concept{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r);
+  margin-bottom:24px;overflow:hidden;box-shadow:var(--shadow);
+}
+.concept--pick{border-color:var(--accent);border-width:2px}
+.concept__head{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:10px 14px;
+  padding:22px 26px 0;
+}
+.concept__no{font-family:var(--mono);font-size:.78rem;color:var(--ink-2);letter-spacing:.1em}
+.pick{
+  font-family:var(--mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.11em;
+  background:var(--accent);color:var(--on-accent);border-radius:999px;padding:4px 11px;
+}
+.concept__note{padding:8px 26px 22px;color:var(--ink-2);font-size:.96rem;max-width:70ch}
+
+.stage{
+  display:grid;grid-template-columns:200px 1fr;gap:0;
+  border-top:1px solid var(--line);
+}
+@media (max-width:720px){.stage{grid-template-columns:1fr}}
+.stage__mark{
+  display:grid;place-items:center;padding:34px 20px;
+  background:var(--surface-2);border-right:1px solid var(--line);
+}
+@media (max-width:720px){.stage__mark{border-right:0;border-bottom:1px solid var(--line)}}
+.stage__mark svg{width:104px;height:104px;color:var(--accent)}
+.stage__rest{display:flex;flex-direction:column}
+
+.row{padding:20px 26px;display:flex;flex-wrap:wrap;align-items:center;gap:26px 32px}
+.row+.row{border-top:1px solid var(--line)}
+.row--dark{background:var(--ink)}
+.row__label{
+  font-family:var(--mono);font-size:.66rem;text-transform:uppercase;letter-spacing:.12em;
+  color:var(--ink-2);width:100%;
+}
+.row--dark .row__label{color:color-mix(in srgb,var(--ground) 55%,transparent)}
+
+/* lockups */
+.lockup{display:flex;align-items:center;gap:13px}
+.lockup svg{width:46px;height:46px;flex:none;color:var(--accent)}
+.lockup__words{display:flex;flex-direction:column;line-height:.98}
+.lockup__words b{
+  font-family:var(--display);font-weight:800;font-size:1.42rem;letter-spacing:-.035em;color:var(--ink);
+}
+.lockup__words b+b{color:var(--accent)}
+.lockup--line{align-items:center}
+.lockup--line .lockup__words{flex-direction:row;gap:.3em;align-items:baseline}
+.lockup--sub .lockup__words small{
+  font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.18em;
+  color:var(--ink-2);margin-top:6px;
+}
+.row--dark .lockup__words b{color:var(--ground)}
+.row--dark .lockup__words b+b{color:var(--accent)}
+.row--dark .lockup svg{color:var(--accent)}
+.row--dark .lockup--mono svg,.row--dark .lockup--mono .lockup__words b{color:var(--ground)}
+.lockup--mono svg,.lockup--mono .lockup__words b{color:var(--ink)}
+
+/* size + application tests */
+.sizes{display:flex;align-items:flex-end;gap:22px}
+.sizes figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:7px}
+.sizes svg{color:var(--accent);display:block}
+.sizes figcaption{font-family:var(--mono);font-size:.62rem;color:var(--ink-2);letter-spacing:.06em}
+.chip{
+  display:flex;align-items:center;gap:8px;background:var(--ground);
+  border:1px solid var(--line);border-radius:9px;padding:6px 11px;font-size:.8rem;font-weight:500;
+}
+.chip svg{width:17px;height:17px;color:var(--accent)}
+.tabsim{
+  display:flex;align-items:center;gap:9px;background:var(--surface-2);
+  border-radius:9px 9px 0 0;padding:8px 14px;border:1px solid var(--line);border-bottom:0;
+  font-size:.79rem;color:var(--ink-2);max-width:230px;
+}
+.tabsim svg{width:15px;height:15px;flex:none;color:var(--accent)}
+.tabsim span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* palette */
+.sys{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px;margin-top:8px}
+.swatch{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--surface)}
+.swatch__chip{height:78px}
+.swatch__meta{padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.swatch__meta b{font-size:.92rem;font-weight:600}
+.swatch__meta code{font-family:var(--mono);font-size:.74rem;color:var(--ink-2)}
+
+.note{
+  background:var(--warm-soft);border:1px solid color-mix(in srgb,var(--warm) 32%,transparent);
+  border-radius:14px;padding:18px 22px;color:var(--ink);font-size:.95rem;max-width:72ch;
+}
+.note b{color:var(--warm)}
+footer.end{border-top:1px solid var(--line);margin-top:44px;padding-block:26px 46px;font-family:var(--mono);font-size:.74rem;color:var(--ink-2)}
+section{padding-bottom:clamp(30px,5vw,52px)}
+</style>
+</head>
+<body>
+
+<!-- MARK DEFINITIONS -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+
+  <!-- 1 · SQUIRCLE PAW -->
+  <symbol id="m1" viewBox="0 0 100 100">
+    <mask id="k1">
+      <rect width="100" height="100" fill="#000"/>
+      <rect x="2" y="2" width="96" height="96" rx="26" fill="#fff"/>
+      <g fill="#000" transform="translate(50 51) scale(.8) translate(-50 -51)">
+        <ellipse cx="30" cy="42" rx="9.4" ry="12.4" transform="rotate(-22 30 42)"/>
+        <ellipse cx="45.5" cy="31" rx="10" ry="13.2" transform="rotate(-7 45.5 31)"/>
+        <ellipse cx="62.5" cy="33" rx="10" ry="13.2" transform="rotate(9 62.5 33)"/>
+        <ellipse cx="76" cy="47" rx="9.2" ry="12" transform="rotate(27 76 47)"/>
+        <ellipse cx="51" cy="70" rx="19" ry="15.5"/>
+      </g>
+    </mask>
+    <rect width="100" height="100" fill="currentColor" mask="url(#k1)"/>
+  </symbol>
+
+  <!-- 2 · GOOD DOG -->
+  <symbol id="m2" viewBox="0 0 100 100">
+    <mask id="k2">
+      <rect width="100" height="100" fill="#000"/>
+      <g fill="#fff">
+        <rect x="6" y="24" width="21" height="47" rx="10.5" transform="rotate(-12 16.5 47.5)"/>
+        <rect x="73" y="24" width="21" height="47" rx="10.5" transform="rotate(12 83.5 47.5)"/>
+        <ellipse cx="50" cy="45" rx="29" ry="28"/>
+        <ellipse cx="50" cy="70" rx="18" ry="17"/>
+      </g>
+      <g fill="#000">
+        <circle cx="38.5" cy="41" r="5"/>
+        <circle cx="61.5" cy="41" r="5"/>
+        <ellipse cx="50" cy="63" rx="6.6" ry="5.2"/>
+      </g>
+    </mask>
+    <rect width="100" height="100" fill="currentColor" mask="url(#k2)"/>
+  </symbol>
+
+  <!-- 3 · PAW D -->
+  <symbol id="m3" viewBox="0 0 100 100">
+    <mask id="k3">
+      <rect width="100" height="100" fill="#000"/>
+      <path d="M16 11 H48 A38 38 0 0 1 48 89 H16 Z" fill="#fff"/>
+      <g fill="#000">
+        <ellipse cx="40" cy="45" rx="4.4" ry="5.8" transform="rotate(-22 40 45)"/>
+        <ellipse cx="49" cy="39.5" rx="4.7" ry="6.2" transform="rotate(-7 49 39.5)"/>
+        <ellipse cx="58.5" cy="40.5" rx="4.7" ry="6.2" transform="rotate(9 58.5 40.5)"/>
+        <ellipse cx="66" cy="47.5" rx="4.3" ry="5.6" transform="rotate(27 66 47.5)"/>
+        <ellipse cx="52.5" cy="60" rx="9.4" ry="7.8"/>
+      </g>
+    </mask>
+    <rect width="100" height="100" fill="currentColor" mask="url(#k3)"/>
+  </symbol>
+
+  <!-- 4 · NAME TAG -->
+  <symbol id="m4" viewBox="0 0 100 100">
+    <mask id="k4">
+      <rect width="100" height="100" fill="#000"/>
+      <circle cx="50" cy="62" r="35" fill="#fff"/>
+      <circle cx="50" cy="16" r="10.5" fill="none" stroke="#fff" stroke-width="7"/>
+      <g fill="#000">
+        <ellipse cx="38.5" cy="57" rx="4.4" ry="5.8" transform="rotate(-22 38.5 57)"/>
+        <ellipse cx="47.5" cy="51.5" rx="4.7" ry="6.2" transform="rotate(-7 47.5 51.5)"/>
+        <ellipse cx="57" cy="52.5" rx="4.7" ry="6.2" transform="rotate(9 57 52.5)"/>
+        <ellipse cx="64.5" cy="59.5" rx="4.3" ry="5.6" transform="rotate(27 64.5 59.5)"/>
+        <ellipse cx="51" cy="72" rx="9.4" ry="7.8"/>
+      </g>
+    </mask>
+    <rect width="100" height="100" fill="currentColor" mask="url(#k4)"/>
+  </symbol>
+</svg>
+
+<div class="wrap">
+
+<header class="top">
+  <p class="eyebrow">Identity · Doggy Development</p>
+  <h1>Four marks to choose from</h1>
+  <p class="lede">Each one is drawn as clean vector, works in a single colour, and holds together at favicon size. Concept 02, <strong>Good Dog</strong>, was the one chosen — it is the mark used across the website.</p>
+</header>
+
+<section>
+<article class="concept">
+  <div class="concept__head">
+    <span class="concept__no">01</span>
+    <h2>The Squircle</h2>
+  </div>
+  <p class="concept__note">A paw held in a rounded square. The safest of the four and the most flexible — it already looks like an app icon, drops straight into a social profile circle, and reads at any size. Least distinctive as a standalone mark.</p>
+
+  <div class="stage">
+    <div class="stage__mark"><svg><use href="#m1"/></svg></div>
+    <div class="stage__rest">
+      <div class="row">
+        <span class="row__label">Primary lockup</span>
+        <span class="lockup lockup--sub">
+          <svg><use href="#m1"/></svg>
+          <span class="lockup__words"><b>Doggy</b><b>Development</b><small>North Shore</small></span>
+        </span>
+        <span class="lockup lockup--line">
+          <svg><use href="#m1"/></svg>
+          <span class="lockup__words"><b>Doggy</b><b>Development</b></span>
+        </span>
+      </div>
+      <div class="row row--dark">
+        <span class="row__label">Reversed</span>
+        <span class="lockup">
+          <svg><use href="#m1"/></svg>
+          <span class="lockup__words"><b>Doggy</b><b>Development</b></span>
+        </span>
+        <span class="lockup lockup--mono">
+          <svg><use href="#m1"/></svg>
+          <span class="lockup__words"><b>Doggy</b><b>Development</b></span>
+        </span>
+      </div>
+      <div class="row">
+        <span class="row__label">Size test</span>
+        <div class="sizes">
+          <figure><svg width="56" height="56"><use href="#m1"/></svg><figcaption>56</figcaption></figure>
+          <figure><svg width="32" height="32"><use href="#m1"/></svg><figcaption>32</figcaption></figure>
+          <figure><svg width="20" height="20"><use href="#m1"/></svg><figcaption>20</figcaption></figure>
+          <figure><svg width="16" height="16"><use href="#m1"/></svg><figcaption>16</figcaption></figure>
+        </div>
+        <div class="tabsim"><svg><use href="#m1"/></svg><span>Doggy Development</span></div>
+      </div>
+    </div>
+  </div>
+</article>
+
+<article class="concept concept--pick">
+  <div class="concept__head">
+    <span class="concept__no">02</span>
+    <h2>Good Dog</h2>
+    <span class="pick">My pick</span>
+  </div>
+  <p class="concept__note">A dog's face reduced to five shapes — two folded ears, a head, a chin, and a nose. This is the one people will remember and describe to a friend — it has a character rather than a symbol, which matters for a business built on one person your dog already knows. Warmest of the four, and the only one that isn't a paw print.</p>
+
+  <div class="stage">
+    <div class="stage__mark"><svg><use href="#m2"/></svg></div>
+    <div class="stage__rest">
+      <div class="row">
+        <span class="row__label">Primary lockup</span>
+        <span class="lockup lockup--sub">
+          <svg><use href="#m2"/></svg>
+          <span class="lockup__words"><b>Doggy</b><b>Development</b><small>North Shore</small></span>
+        </span>
+        <span class="lockup lockup--line">
+          <svg><use href="#m2"/></svg>
+          <span class="lockup__words"><b>Doggy</b><b>Development</b></span>
+        </span>
+      </div>
+      <div class="row row--dark">
+        <span class="row__label">Reversed</span>
+        <span class="lockup">
+          <svg><use href="#m2"/></svg>
+          <span class="lockup__words"><b>Doggy</b><b>Development</b></span>
+        </span>
+        <span class="lockup lockup--mono">
+          <svg><use href="#m2"/></svg>
+          <span class="lockup__words"><b>Doggy</b><b>Development</b></span>
+        </span>
+      </div>
+      <div class="row">
+        <span class="row__label">Size test</span>
+        <div class="sizes">
+          <figure><svg width="56" height="56"><use href="#m2"/></svg><figcaption>56</figcaption></figure>
+          <figure><svg width="32" height="32"><use href="#m2"/></svg><figcaption>32</figcaption></figure>
+          <figure><svg width="20" height="20"><use href="#m2"/></svg><figcaption>20</figcaption></figure>
+          <figure><svg width="16" height="16"><use href="#m2"/></svg><figcaption>16</figcaption></figure>
+        </div>
+        <div class="tabsim"><svg><use href="#m2"/></svg><span>Doggy Development</span></div>
+      </div>
+    </div>
+  </div>
+</article>
+
+<article class="concept">
+  <div class="concept__head">
+    <span class="concept__no">03</span>
+    <h2>The Paw D</h2>
+  </div>
+  <p class="concept__note">A solid D with the paw cut out of it — a monogram, not an illustration. The most grown-up of the four and the strongest as a stamp: on a van door, a poo-bag dispenser, or embroidered on a polo it holds up at a distance where the others go soft.</p>
+
+  <div class="stage">
+    <div class="stage__mark"><svg><use href="#m3"/></svg></div>
+    <div class="stage__rest">
+      <div class="row">
+        <span class="row__label">Primary lockup</span>
+        <span class="lockup lockup--sub">
+          <svg><use href="#m3"/></svg>
+          <span class="lockup__words"><b>Doggy</b><b>Development</b><small>North Shore</small></span>
+        </span>
+        <span class="lockup lockup--line">
+          <svg><use href="#m3"/></svg>
+          <span class="lockup__words"><b>Doggy</b><b>Development</b></span>
+        </span>
+      </div>
+      <div class="row row--dark">
+        <span class="row__label">Reversed</span>
+        <span class="lockup">
+          <svg><use href="#m3"/></svg>
+          <span class="lockup__words"><b>Doggy</b><b>Development</b></span>
+        </span>
+        <span class="lockup lockup--mono">
+          <svg><use href="#m3"/></svg>
+          <span class="lockup__words"><b>Doggy</b><b>Development</b></span>
+        </span>
+      </div>
+      <div class="row">
+        <span class="row__label">Size test</span>
+        <div class="sizes">
+          <figure><svg width="56" height="56"><use href="#m3"/></svg><figcaption>56</figcaption></figure>
+          <figure><svg width="32" height="32"><use href="#m3"/></svg><figcaption>32</figcaption></figure>
+          <figure><svg width="20" height="20"><use href="#m3"/></svg><figcaption>20</figcaption></figure>
+          <figure><svg width="16" height="16"><use href="#m3"/></svg><figcaption>16</figcaption></figure>
+        </div>
+        <div class="tabsim"><svg><use href="#m3"/></svg><span>Doggy Development</span></div>
+      </div>
+    </div>
+  </div>
+</article>
+
+<article class="concept">
+  <div class="concept__head">
+    <span class="concept__no">04</span>
+    <h2>The Name Tag</h2>
+  </div>
+  <p class="concept__note">A collar tag on its ring. The most literal to the business — every dog you walk is wearing one — and it gives you an obvious physical product: a real tag with your number on the back, clipped to every client's collar. The ring is the weak point at small sizes; below about 20px it starts to fill in.</p>
+
+  <div class="stage">
+    <div class="stage__mark"><svg><use href="#m4"/></svg></div>
+    <div class="stage__rest">
+      <div class="row">
+        <span class="row__label">Primary lockup</span>
+        <span class="lockup lockup--sub">
+          <svg><use href="#m4"/></svg>
+          <span class="lockup__words"><b>Doggy</b><b>Development</b><small>North Shore</small></span>
+        </span>
+        <span class="lockup lockup--line">
+          <svg><use href="#m4"/></svg>
+          <span class="lockup__words"><b>Doggy</b><b>Development</b></span>
+        </span>
+      </div>
+      <div class="row row--dark">
+        <span class="row__label">Reversed</span>
+        <span class="lockup">
+          <svg><use href="#m4"/></svg>
+          <span class="lockup__words"><b>Doggy</b><b>Development</b></span>
+        </span>
+        <span class="lockup lockup--mono">
+          <svg><use href="#m4"/></svg>
+          <span class="lockup__words"><b>Doggy</b><b>Development</b></span>
+        </span>
+      </div>
+      <div class="row">
+        <span class="row__label">Size test</span>
+        <div class="sizes">
+          <figure><svg width="56" height="56"><use href="#m4"/></svg><figcaption>56</figcaption></figure>
+          <figure><svg width="32" height="32"><use href="#m4"/></svg><figcaption>32</figcaption></figure>
+          <figure><svg width="20" height="20"><use href="#m4"/></svg><figcaption>20</figcaption></figure>
+          <figure><svg width="16" height="16"><use href="#m4"/></svg><figcaption>16</figcaption></figure>
+        </div>
+        <div class="tabsim"><svg><use href="#m4"/></svg><span>Doggy Development</span></div>
+      </div>
+    </div>
+  </div>
+</article>
+</section>
+
+<section>
+  <div class="concept__head" style="padding-left:0;padding-right:0">
+    <h2>The colours behind all four</h2>
+  </div>
+  <p class="lede" style="margin-bottom:20px">Same palette as the website, so whichever mark you pick already belongs there.</p>
+  <div class="sys">
+    <div class="swatch">
+      <div class="swatch__chip" style="background:#0F8F80"></div>
+      <div class="swatch__meta"><b>Harbour teal</b><code>#0F8F80</code></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch__chip" style="background:#0F2420"></div>
+      <div class="swatch__meta"><b>Deep pine</b><code>#0F2420</code></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch__chip" style="background:#D9552A"></div>
+      <div class="swatch__meta"><b>Coral</b><code>#D9552A</code></div>
+    </div>
+    <div class="swatch">
+      <div class="swatch__chip" style="background:#F5F8F6;border-bottom:1px solid var(--line)"></div>
+      <div class="swatch__meta"><b>Sea mist</b><code>#F5F8F6</code></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="note"><b>Name checks — done.</b> The NZ Companies Register, the NZBN register and the IPONZ trade mark register (classes 41 and 44) were all searched on 5 September 2026 and all came back clear. Note that New Zealand has no business-name register for sole traders, so a clear search is not proof the name is unused — only that no registered entity holds it.</p>
+</section>
+
+<footer class="end">Doggy Development · logo concepts · vector, single-colour safe, favicon tested</footer>
+
+</div>
+</body>
+</html>

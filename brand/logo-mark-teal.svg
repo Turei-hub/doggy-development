@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="512" height="512" role="img" aria-label="Doggy Development">
+  <title>Doggy Development</title>
+  <mask id="dd">
+    <rect width="100" height="100" fill="#000"/>
+    <g fill="#fff">
+      <rect x="6" y="24" width="21" height="47" rx="10.5" transform="rotate(-12 16.5 47.5)"/>
+      <rect x="73" y="24" width="21" height="47" rx="10.5" transform="rotate(12 83.5 47.5)"/>
+      <ellipse cx="50" cy="45" rx="29" ry="28"/>
+      <ellipse cx="50" cy="70" rx="18" ry="17"/>
+    </g>
+    <g fill="#000">
+      <circle cx="38.5" cy="41" r="5"/>
+      <circle cx="61.5" cy="41" r="5"/>
+      <ellipse cx="50" cy="63" rx="6.6" ry="5.2"/>
+    </g>
+  </mask>
+  <rect width="100" height="100" fill="#0F8F80" mask="url(#dd)"/>
+</svg>
