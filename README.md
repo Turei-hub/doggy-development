@@ -106,6 +106,25 @@ Solo rates match Goodwalk exactly. The group walk sits inside the $45–50 band
 North Shore operators charge. The free meet & greet is a deliberate
 differentiator — Fido & Friends charge $25 for theirs.
 
+## Booking enquiries
+
+The "Book a meet & greet" buttons lead to `#/book`, a six-field form that writes
+to a `bookings` collection.
+
+These are handled more strictly than gallery dogs: they hold a name, a phone
+number and a suburb, so `firestore.rules` allows **no public read of any kind** —
+not even by the person who sent one. Only the owner's account can read them.
+They appear in `admin.html` under "New enquiries", with tap-to-call and
+tap-to-email links, and a "Mark handled" button that moves them to a second list.
+
+The form's validation is deliberately wired up *before* the Firebase SDK loads.
+It's the one page where someone is trying to hand over their details, so it must
+never sit dead if Google's CDN is slow or blocked. If Firestore can't be reached
+it says so and gives out the phone number instead of swallowing the enquiry.
+
+No email notification — that would need Cloud Functions and the paid Blaze plan.
+Check `/admin`, or bookmark it on your phone.
+
 ## On client photos
 
 The submission form asks for consent with a tick box before it will send. Photos

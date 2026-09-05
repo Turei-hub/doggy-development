@@ -61,6 +61,34 @@ service cloud.firestore {
       allow update, delete: if isAdmin();
     }
 
+    // A booking enquiry from the public form.
+    //
+    // Note the difference from dogs: these are never publicly readable, not
+    // even by whoever sent one. They hold a name, a phone number and a suburb,
+    // so every read is restricted to the owner's account.
+    function isValidBooking(d) {
+      return d.keys().hasOnly(['name','phone','email','suburb','dog','message','status','created'])
+          && d.keys().hasAll(['name','phone','status','created'])
+          && d.status == 'new'
+          && isShortString(d.name, 60)   && d.name.size() > 0
+          && isShortString(d.phone, 30)  && d.phone.size() > 0
+          && isShortString(d.get('email', ''), 120)
+          && isShortString(d.get('suburb', ''), 60)
+          && isShortString(d.get('dog', ''), 80)
+          && isShortString(d.get('message', ''), 800)
+          && d.created == request.time;
+    }
+
+    match /bookings/{bookingId} {
+      // Owner only. There is no public read of any kind here.
+      allow read: if isAdmin();
+
+      // Anyone may send an enquiry, but only as a new one.
+      allow create: if isValidBooking(request.resource.data);
+
+      allow update, delete: if isAdmin();
+    }
+
     // Nothing else in the database is reachable from the web.
     match /{document=**} {
       allow read, write: if false;

@@ -40,6 +40,7 @@ await env.withSecurityRulesDisabled(async (c) => {
   const db = c.firestore();
   await setDoc(doc(db,'dogs/live1'),    { name:'Ruby', where:'Kelpie', story:'x', photo:PHOTO, status:'approved', created:new Date() });
   await setDoc(doc(db,'dogs/pending1'), { name:'Spam', where:'',       story:'', photo:PHOTO, status:'pending',  created:new Date() });
+  await setDoc(doc(db,'bookings/probe1'), { name:'Probe', phone:'021 000 0000', status:'new', created:new Date() });
 });
 
 let pass=0, fail=0;
@@ -96,6 +97,53 @@ await t('read the pending queue',
   () => assertFails(getDocs(query(collection(rando,'dogs'), where('status','==','pending')))));
 await t('approve a dog',
   () => assertFails(updateDoc(doc(rando,'dogs/pending1'), { status:'approved' })));
+
+console.log('\nBooking enquiries — the public can:');
+await t('send an enquiry',
+  () => assertSucceeds(addDoc(collection(pub,'bookings'),
+        { name:'Sam', phone:'021 234 5678', email:'s@e.co.nz', suburb:'Milford',
+          dog:'Ruby, kelpie', message:'hi', status:'new', created:serverTimestamp() })));
+await t('send one with only a name and phone',
+  () => assertSucceeds(addDoc(collection(pub,'bookings'),
+        { name:'Jo', phone:'0211', status:'new', created:serverTimestamp() })));
+
+console.log('\nBooking enquiries — the public CANNOT:');
+await t('read anyone\'s enquiry (these hold names and phone numbers)',
+  () => assertFails(getDocs(collection(pub,'bookings'))));
+await t('read enquiries even when filtering, the way they can with dogs',
+  () => assertFails(getDocs(query(collection(pub,'bookings'), where('status','==','new')))));
+await t('read back the one they just sent',
+  () => assertFails(getDoc(doc(pub,'bookings/anything'))));
+await t('mark an enquiry handled',
+  () => assertFails(updateDoc(doc(pub,'bookings/probe1'), { status:'done' })));
+await t('delete an enquiry',
+  () => assertFails(deleteDoc(doc(pub,'bookings/probe1'))));
+await t('send one already marked handled',
+  () => assertFails(addDoc(collection(pub,'bookings'),
+        { name:'X', phone:'021', status:'done', created:serverTimestamp() })));
+await t('send one with no phone number',
+  () => assertFails(addDoc(collection(pub,'bookings'),
+        { name:'X', phone:'', status:'new', created:serverTimestamp() })));
+await t('smuggle an extra field into an enquiry',
+  () => assertFails(addDoc(collection(pub,'bookings'),
+        { name:'X', phone:'021', status:'new', created:serverTimestamp(), admin:true })));
+await t('send a 5000-character message',
+  () => assertFails(addDoc(collection(pub,'bookings'),
+        { name:'X', phone:'021', message:'z'.repeat(5000), status:'new', created:serverTimestamp() })));
+
+console.log('\nBooking enquiries — a signed-in non-admin CANNOT:');
+await t('read the enquiries',
+  () => assertFails(getDocs(collection(rando,'bookings'))));
+
+console.log('\nBooking enquiries — the admin CAN:');
+await t('read every enquiry',
+  () => assertSucceeds(getDocs(collection(admin,'bookings'))));
+await t('list new enquiries',
+  () => assertSucceeds(getDocs(query(collection(admin,'bookings'), where('status','==','new')))));
+await t('mark one handled',
+  () => assertSucceeds(updateDoc(doc(admin,'bookings/probe1'), { status:'done' })));
+await t('delete one',
+  () => assertSucceeds(deleteDoc(doc(admin,'bookings/probe1'))));
 
 console.log('\nThe admin CAN:');
 await t('list pending dogs',

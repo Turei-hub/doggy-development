@@ -89,6 +89,10 @@ button,input,textarea{font:inherit;color:inherit}
 .item__story{font-size:.93rem;color:var(--ink-2);margin-top:6px}
 .item__when{font-family:var(--mono);font-size:.7rem;color:var(--ink-2);margin-top:8px}
 .item__actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
+.item--booking{grid-template-columns:1fr}
+.contact{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:5px;font-family:var(--mono);font-size:.86rem}
+.contact a{color:var(--accent);text-decoration:none}
+.contact a:hover{text-decoration:underline}
 
 .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
 .field label{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-2)}
@@ -183,6 +187,15 @@ code{font-family:var(--mono);font-size:.85em;background:var(--surface-2);padding
 
     <section class="panel">
       <div class="section-head">
+        <h2>New enquiries</h2>
+        <span class="count count--warm" id="bkNewCount">0</span>
+      </div>
+      <div class="queue" id="bkNewList"></div>
+      <p class="empty hide" id="bkNewEmpty">No new enquiries.</p>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
         <h2>Waiting for you</h2>
         <span class="count count--warm" id="pendingCount">0</span>
       </div>
@@ -228,6 +241,15 @@ code{font-family:var(--mono);font-size:.85em;background:var(--surface-2);padding
       <p class="empty hide" id="liveEmpty">Nothing published yet.</p>
     </section>
 
+    <section class="panel">
+      <div class="section-head">
+        <h2>Handled enquiries</h2>
+        <span class="count" id="bkDoneCount">0</span>
+      </div>
+      <div class="queue" id="bkDoneList"></div>
+      <p class="empty hide" id="bkDoneEmpty">Nothing handled yet.</p>
+    </section>
+
   </div>
 
   <div class="foot">
@@ -268,6 +290,7 @@ const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db   = getFirestore(app);
 const dogs = collection(db, "dogs");
+const bookings = collection(db, "bookings");
 
 /* ─────────  auth  ───────── */
 
@@ -394,9 +417,93 @@ async function fill(status, listEl, emptyEl, countEl, mode){
   emptyEl.classList.toggle("hide", snap.size > 0);
 }
 
+/* ─────────  booking enquiries  ───────── */
+
+function bookingRow(id, d, handled){
+  const el = document.createElement("article");
+  el.className = "item item--booking";
+
+  const info = document.createElement("div");
+  const name = document.createElement("div");
+  name.className = "item__name";
+  name.textContent = d.name || "(no name)";
+  info.appendChild(name);
+
+  const meta = document.createElement("div");
+  meta.className = "contact";
+  if (d.phone) {
+    const a = document.createElement("a");
+    a.href = "tel:" + d.phone.replace(/[^\d+]/g, "");
+    a.textContent = d.phone;
+    meta.appendChild(a);
+  }
+  if (d.email) {
+    const a = document.createElement("a");
+    a.href = "mailto:" + d.email;
+    a.textContent = d.email;
+    meta.appendChild(a);
+  }
+  info.appendChild(meta);
+
+  const bits = [d.dog, d.suburb].filter(Boolean).join(" · ");
+  if (bits) {
+    const w = document.createElement("div");
+    w.className = "item__where";
+    w.textContent = bits;
+    info.appendChild(w);
+  }
+  if (d.message) {
+    const m = document.createElement("p");
+    m.className = "item__story";
+    m.textContent = d.message;
+    info.appendChild(m);
+  }
+
+  const t = document.createElement("div");
+  t.className = "item__when";
+  t.textContent = (handled ? "Handled · sent " : "Sent ") + when(d.created);
+  info.appendChild(t);
+
+  const actions = document.createElement("div");
+  actions.className = "item__actions";
+
+  const toggle = document.createElement("button");
+  toggle.className = handled ? "btn btn--ghost btn--sm" : "btn btn--primary btn--sm";
+  toggle.textContent = handled ? "Move back" : "Mark handled";
+  toggle.addEventListener("click", () => act(toggle, () =>
+    updateDoc(doc(db, "bookings", id), { status: handled ? "new" : "done" }),
+    handled ? "Moved back to new." : `${d.name || "Enquiry"} marked handled.`));
+  actions.appendChild(toggle);
+
+  const del = document.createElement("button");
+  del.className = "btn btn--danger btn--sm";
+  del.textContent = "Delete";
+  del.addEventListener("click", () => {
+    if (!confirm(`Delete the enquiry from ${d.name || "this person"}? This can't be undone.`)) return;
+    act(del, () => deleteDoc(doc(db, "bookings", id)), "Enquiry deleted.");
+  });
+  actions.appendChild(del);
+
+  info.appendChild(actions);
+  el.appendChild(info);
+  return el;
+}
+
+async function fillBookings(status, listEl, emptyEl, countEl, handled){
+  const snap = await getDocs(query(
+    bookings, where("status", "==", status), orderBy("created", "desc"), limit(100)
+  ));
+  listEl.textContent = "";
+  snap.docs.forEach(d => listEl.appendChild(bookingRow(d.id, d.data(), handled)));
+  countEl.textContent = String(snap.size);
+  emptyEl.classList.toggle("hide", snap.size > 0);
+}
+
 async function refresh(){
+  await fillBookings("new",  $("bkNewList"),  $("bkNewEmpty"),  $("bkNewCount"),  false);
   await fill("pending", $("pendingList"), $("pendingEmpty"), $("pendingCount"), "pending");
   await fill("approved", $("liveList"), $("liveEmpty"), $("liveCount"), "live");
+  await fillBookings("done", $("bkDoneList"), $("bkDoneEmpty"), $("bkDoneCount"), true);
 }
 
 /* ─────────  add a dog directly  ───────── */

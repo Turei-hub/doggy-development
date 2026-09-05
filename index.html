@@ -413,6 +413,40 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
 .cred{display:flex;gap:11px;align-items:flex-start;font-size:.95rem;color:var(--ink-2)}
 .cred svg{width:18px;height:18px;flex:none;margin-top:3px;fill:var(--accent)}
 
+/* ─────────────────────────  BOOK  ───────────────────────── */
+.book-layout{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(24px,4vw,48px);align-items:start}
+@media (max-width:880px){.book-layout{grid-template-columns:1fr}}
+.booker{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-m);
+  padding:clamp(20px,3vw,30px);display:flex;flex-direction:column;gap:16px;box-shadow:var(--shadow);
+}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:520px){.field-row{grid-template-columns:1fr}}
+.field input[type=tel],.field input[type=email]{
+  background:var(--ground);border:1px solid var(--line-strong);border-radius:var(--r-s);
+  padding:10px 12px;font-size:.95rem;width:100%;
+}
+.field input.is-bad{border-color:var(--warm);box-shadow:0 0 0 3px var(--warm-soft)}
+.booker .btn{align-self:flex-start}
+.book-aside{
+  background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r-m);
+  padding:clamp(20px,3vw,28px);
+}
+.book-aside h3{margin-bottom:16px}
+.steps{list-style:none;margin:0;padding:0;counter-reset:step;display:flex;flex-direction:column;gap:18px}
+.steps li{counter-increment:step;display:grid;grid-template-columns:26px 1fr;gap:14px;align-items:start}
+.steps li::before{
+  content:counter(step);grid-row:span 2;
+  width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--on-accent);
+  font-family:var(--mono);font-size:.78rem;display:grid;place-items:center;margin-top:2px;
+}
+.steps b{font-weight:600;font-size:1rem}
+.steps span{grid-column:2;color:var(--ink-2);font-size:.93rem;line-height:1.5;display:block;margin-top:3px}
+.book-aside__note{
+  margin-top:22px;padding-top:18px;border-top:1px solid var(--line-strong);
+  color:var(--ink-2);font-size:.9rem;
+}
+
 /* ─────────────────────────  CTA + FOOTER  ───────────────────────── */
 .cta{
   background:var(--ink);color:var(--ground);border-radius:var(--r-l);
@@ -496,7 +530,7 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
       <a class="nav__link" href="#/gallery" data-route="/gallery">Gallery</a>
       <a class="nav__link" href="#/services" data-route="/services">Services &amp; Pricing</a>
       <a class="nav__link" href="#/about" data-route="/about">About</a>
-      <a class="btn btn--primary btn--sm nav__cta" href="#/about" data-route="/about">Book a meet &amp; greet</a>
+      <a class="btn btn--primary btn--sm nav__cta" href="#/book" data-route="/book">Book a meet &amp; greet</a>
     </nav>
     <button class="burger" id="burger" aria-expanded="false" aria-controls="drawer" aria-label="Open menu">
       <span></span><span></span><span></span>
@@ -517,6 +551,7 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
     <a class="drawer__link" href="#/gallery" data-route="/gallery">Gallery</a>
     <a class="drawer__link" href="#/services" data-route="/services">Services &amp; Pricing</a>
     <a class="drawer__link" href="#/about" data-route="/about">About</a>
+    <a class="drawer__link" href="#/book" data-route="/book">Book a walk</a>
   </nav>
   <div class="drawer__foot">
     <h4>Get in touch</h4>
@@ -537,13 +572,13 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
         <h1 class="hero__title">Your dog's <span>best hour</span> of the day.</h1>
         <p class="lede">Small-group and solo walks around Takapuna, Milford and Devonport — beach mornings, bush tracks, and a tired, happy dog on the couch by the time you get home.</p>
         <div class="hero__actions">
-          <a class="btn btn--primary" href="#/about" data-route="/about">Book a meet &amp; greet</a>
+          <a class="btn btn--primary" href="#/book" data-route="/book">Book a meet &amp; greet</a>
           <a class="btn btn--ghost" href="#/services" data-route="/services">See services &amp; pricing</a>
         </div>
         <div class="trustline">
-          <span><i></i>Fully insured</span>
-          <span><i></i>Canine first aid</span>
-          <span><i></i>Photo update every walk</span>
+          <span><i></i>Six dogs max</span>
+          <span><i></i>Free meet &amp; greet</span>
+          <span><i></i>Photo after every walk</span>
         </div>
       </div>
 
@@ -574,9 +609,9 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
 
   <div class="wrap section">
     <div class="head">
-      <p class="eyebrow">What we do</p>
+      <p class="eyebrow">What I do</p>
       <h2>Three ways to get your dog out the door</h2>
-      <p class="lede">Every dog is different. Start with a free meet &amp; greet and we'll work out which one fits.</p>
+      <p class="lede">Every dog is different. Start with a free meet &amp; greet and we'll sort out which one fits.</p>
     </div>
     <div class="grid-3">
       <article class="card">
@@ -588,7 +623,7 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
       <article class="card">
         <span class="card__icon"><svg><use href="#leash"/></svg></span>
         <h3>Solo walk</h3>
-        <p>One-on-one for reactive, elderly, or recovering dogs. We work at their pace and keep to quiet routes.</p>
+        <p>One-on-one for reactive, elderly, or recovering dogs. I work at their pace and keep to quiet routes.</p>
         <p class="card__meta">30 or 45 min</p>
       </article>
       <article class="card">
@@ -603,9 +638,9 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
   <div class="wrap section--tight section">
     <div class="areas">
       <div class="head" style="margin-bottom:0">
-        <p class="eyebrow">Where we walk</p>
+        <p class="eyebrow">Where I walk</p>
         <h2>North Shore, door to door</h2>
-        <p class="lede">Pick-ups run in two loops each morning. If your suburb isn't listed, ask anyway — we can usually make the edges work.</p>
+        <p class="lede">Pick-ups run in two loops each morning. If your suburb isn't listed, ask anyway — I can usually make the edges work.</p>
       </div>
       <div class="suburbs">
         <span class="suburb suburb--core">Takapuna</span>
@@ -629,11 +664,11 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
     <div class="cta">
       <div>
         <h2>Meet the crew your dog will join</h2>
-        <p>Our clients share their dogs' names, stories and best walk-day photos in the gallery.</p>
+        <p>My clients share their dogs' names, stories and best walk-day photos in the gallery.</p>
       </div>
       <div class="hero__actions">
         <a class="btn btn--primary" href="#/gallery" data-route="/gallery">Visit the gallery</a>
-        <a class="btn btn--ghost" href="#/about" data-route="/about">Get in touch</a>
+        <a class="btn btn--ghost" href="#/book" data-route="/book">Get in touch</a>
       </div>
     </div>
   </div>
@@ -644,8 +679,8 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
   <div class="wrap section">
     <div class="head">
       <p class="eyebrow">The pack</p>
-      <h2>Our client dogs</h2>
-      <p class="lede">Every dog we walk gets a spot here. Add yours — a photo, their name, and the story of how they ended up with you.</p>
+      <h2>The dogs I walk</h2>
+      <p class="lede">Every dog I walk gets a spot here. Add yours — a photo, their name, and the story of how they ended up with you.</p>
     </div>
 
     <div class="gallery-layout">
@@ -683,7 +718,7 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
 
         <p class="status" id="status" role="status"></p>
         <button class="btn btn--primary" type="submit" id="submitBtn">Send to the gallery</button>
-        <p class="form-note">Submissions are checked before they go up — nothing appears on the site until we've approved it, usually within a day.</p>
+        <p class="form-note">Submissions are checked before they go up — nothing appears on the site until I've approved it, usually within a day.</p>
       </form>
 
       <div>
@@ -717,7 +752,7 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
           <li>Door-to-door pick-up</li>
           <li>Photo and note after every walk</li>
         </ul>
-        <a class="btn btn--ghost" href="#/about" data-route="/about">Enquire</a>
+        <a class="btn btn--ghost" href="#/book" data-route="/book">Enquire</a>
       </article>
 
       <article class="tier tier--feature">
@@ -730,7 +765,7 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
           <li>Towel-dry and fresh water on return</li>
           <li>Weekday mornings and early afternoons</li>
         </ul>
-        <a class="btn btn--primary" href="#/about" data-route="/about">Enquire</a>
+        <a class="btn btn--primary" href="#/book" data-route="/book">Enquire</a>
       </article>
 
       <article class="tier">
@@ -743,7 +778,7 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
           <li>Same walker every visit</li>
           <li>Photo and note before you're back</li>
         </ul>
-        <a class="btn btn--ghost" href="#/about" data-route="/about">Enquire</a>
+        <a class="btn btn--ghost" href="#/book" data-route="/book">Enquire</a>
       </article>
     </div>
 
@@ -772,15 +807,15 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
     <div>
       <details class="faq" open>
         <summary>How do you get into my house?</summary>
-        <p>Most clients give us a spare key or a lockbox code, stored under a client number rather than an address. We can also work with a smart lock if you'd rather issue a code you control.</p>
+        <p>Most clients give me a spare key or a lockbox code, stored under a client number rather than an address. I can also work with a smart lock if you'd rather issue a code you control.</p>
       </details>
       <details class="faq">
         <summary>What happens if it's pouring down?</summary>
-        <p>We walk in most Auckland weather — that's what towels are for. If there's a storm warning or lightning, we swap the walk for an indoor enrichment visit at no extra charge, or move it to another day that week.</p>
+        <p>I walk in most Auckland weather — that's what towels are for. If there's a storm warning or lightning, I swap the walk for an indoor enrichment visit at no extra charge, or move it to another day that week.</p>
       </details>
       <details class="faq">
         <summary>Is my dog off-lead?</summary>
-        <p>Only with your written permission, only where the council allows it, and only once we've seen a reliable recall on a long line. Everything else stays on-lead.</p>
+        <p>Only with your written permission, only where the council allows it, and only once I've seen a reliable recall on a long line. Everything else stays on-lead.</p>
       </details>
       <details class="faq">
         <summary>What if my dog doesn't get on with others?</summary>
@@ -804,21 +839,13 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
 
     <div class="about-grid">
       <div class="prose">
-        <p>This is placeholder copy in your voice's shape — replace it with your own story and the page keeps its rhythm.</p>
-        <p>We started walking dogs on the North Shore because too many good dogs were spending their best hours alone. What began as a favour for one neighbour in Takapuna turned into a small round of regulars — the same faces, the same beaches, five mornings a week.</p>
-        <p>We keep the business deliberately small. Six dogs to a group, one walker they already know, and the same route pattern each week so nervous dogs learn what to expect. You get a photo and a short note after every walk, so you know how it went before you get home.</p>
-
-        <h3>What we bring</h3>
-        <div class="creds">
-          <div class="cred"><svg><use href="#tick"/></svg><span>Public liability and care-custody-control insurance</span></div>
-          <div class="cred"><svg><use href="#tick"/></svg><span>Canine first aid certified, refreshed annually</span></div>
-          <div class="cred"><svg><use href="#tick"/></svg><span>Force-free handling — no prong, choke or e-collars</span></div>
-          <div class="cred"><svg><use href="#tick"/></svg><span>Auckland Council dog control bylaws followed on every route</span></div>
-          <div class="cred"><svg><use href="#tick"/></svg><span>Vehicle fitted with individual crash-tested crates</span></div>
-        </div>
+        <p>I'm Turei. I grew up in Gisborne, on the kind of place where the dogs worked for a living — sheep dogs that could read a paddock better than most people read a room, and pig dogs that were all business right up until they weren't.</p>
+        <p>I was on a horse about as early as I could walk, and I can't remember a day of my childhood without a dog somewhere nearby. That's the whole reason I do this. I didn't decide to become a dog person. I never learned any other way to live.</p>
+        <p>Working dogs teach you to read what an animal is telling you — when it's had enough, when it's nervous and covering for it, when it wants the long way home. A kelpie in a Milford backyard isn't so different from one on a hill outside Gisborne. Both of them just want a job to do.</p>
+        <p>I also build software, which is why this site exists and why you get a photo and a note after every walk instead of wondering how it went. It means the booking side works properly, and that when something breaks I fix it myself the same day.</p>
 
         <h3>How it starts</h3>
-        <p>Every new dog begins with a free 30-minute meet &amp; greet at your place. We meet the dog, you tell us the quirks, and we work out whether a group or solo walk suits. No commitment either way.</p>
+        <p>Every new dog begins with a free 30-minute meet &amp; greet at your place. I meet the dog, you tell me the quirks, and we work out whether a group or solo walk suits. No commitment either way.</p>
       </div>
 
       <div class="factbox">
@@ -841,8 +868,69 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
             <a href="mailto:milner.turei@gmail.com" style="text-decoration:none;font-family:var(--mono);font-size:.92rem">milner.turei@gmail.com</a>
           </dd>
         </dl>
-        <a class="btn btn--primary" href="mailto:milner.turei@gmail.com">Book a meet &amp; greet</a>
+        <a class="btn btn--primary" href="#/book" data-route="/book">Book a meet &amp; greet</a>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════  BOOK  ═══════════════ -->
+<section class="page" id="page-book">
+  <div class="wrap section">
+    <div class="head">
+      <p class="eyebrow">Book</p>
+      <h2>Let's meet your dog</h2>
+      <p class="lede">Every new dog starts with a free 30-minute meet &amp; greet at your place — no commitment, no charge. Tell me a bit below and I'll get back to you, usually the same day.</p>
+    </div>
+
+    <div class="book-layout">
+      <form class="booker" id="bookForm" novalidate>
+        <div class="field">
+          <label for="bkName">Your name</label>
+          <input type="text" id="bkName" maxlength="60" autocomplete="name" placeholder="Sam Whittaker" required>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="bkPhone">Phone</label>
+            <input type="tel" id="bkPhone" maxlength="30" autocomplete="tel" placeholder="021 234 5678" required>
+          </div>
+          <div class="field">
+            <label for="bkEmail">Email</label>
+            <input type="email" id="bkEmail" maxlength="120" autocomplete="email" placeholder="sam@example.co.nz">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="bkSuburb">Suburb</label>
+            <input type="text" id="bkSuburb" maxlength="60" placeholder="Milford">
+          </div>
+          <div class="field">
+            <label for="bkDog">Dog's name &amp; breed</label>
+            <input type="text" id="bkDog" maxlength="80" placeholder="Ruby, kelpie">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="bkMessage">Anything I should know</label>
+          <textarea id="bkMessage" maxlength="800" placeholder="Which walk you're after, days that suit, whether she's nervous around other dogs — whatever's useful."></textarea>
+        </div>
+
+        <p class="status" id="bkStatus" role="status"></p>
+        <button class="btn btn--primary" type="submit" id="bkSubmit">Send enquiry</button>
+        <p class="form-note">Goes straight to me — nothing is published anywhere. If you'd rather just ring, I'm on <a href="tel:+64224517725">022 451 7725</a>.</p>
+      </form>
+
+      <aside class="book-aside">
+        <h3>What happens next</h3>
+        <ol class="steps">
+          <li><b>I get in touch</b><span>Usually the same day, by text or a call — whichever you'd prefer.</span></li>
+          <li><b>We meet at your place</b><span>Half an hour, free. I meet the dog, you tell me the quirks, and we work out whether a group or solo walk suits.</span></li>
+          <li><b>First walk</b><span>If it feels right for everyone, we pick a day and start. No contract, no minimum.</span></li>
+        </ol>
+        <p class="book-aside__note">Walking Takapuna, Milford, Devonport and out to Long Bay. If your suburb isn't on the list, ask anyway — I can usually make the edges work.</p>
+      </aside>
     </div>
   </div>
 </section>
@@ -908,8 +996,8 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
   /* ─────────  MARQUEE  ───────── */
   var PHRASES = [
     "Beach mornings","Bush tracks","Door-to-door pick-up","Photo after every walk",
-    "Max six dogs","Fully insured","Canine first aid","Takapuna to Long Bay",
-    "Force-free handling","Towel-dry included"
+    "Max six dogs","Free meet & greet","Raised on working dogs","Takapuna to Long Bay",
+    "The same walker every time","Towel-dry included"
   ];
   var track = document.getElementById("marqueeTrack");
   function buildGroup(){
@@ -927,7 +1015,7 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
   track.appendChild(buildGroup());
 
   /* ─────────  ROUTER  ───────── */
-  var ROUTES = { "/":"page-home", "/gallery":"page-gallery", "/services":"page-services", "/about":"page-about" };
+  var ROUTES = { "/":"page-home", "/gallery":"page-gallery", "/services":"page-services", "/about":"page-about", "/book":"page-book" };
   var drawer = document.getElementById("drawer");
   var scrim  = document.getElementById("scrim");
   var burger = document.getElementById("burger");
@@ -1026,7 +1114,7 @@ function card(d, flag){
     const img = document.createElement("img");
     img.loading = "lazy";
     img.decoding = "async";
-    img.alt = d.name || "A dog we walk";
+    img.alt = d.name || "A dog I walk";
     img.addEventListener("load", () => img.classList.add("is-loaded"));
     img.src = d.photo;
     pic.appendChild(img);
@@ -1174,6 +1262,74 @@ drop.addEventListener("drop", e => {
   if (e.dataTransfer && e.dataTransfer.files) handleFile(e.dataTransfer.files[0]);
 });
 
+/* ─────────  booking enquiries  ─────────
+   Wired up before Firebase loads, deliberately. This is the only page on the
+   site where someone is trying to hand over their details, so it must never
+   sit dead if Google's CDN is slow or blocked — validation always runs, and a
+   failure tells them to ring rather than swallowing the enquiry.
+
+   These go into their own collection. Unlike dogs, nobody can read them back
+   — not even the person who sent one. They hold names and phone numbers, so
+   the rules restrict every read to the owner's account. */
+let sendBooking = null;   // set once Firestore is actually available
+
+const bkStatus = $("bkStatus");
+const bkSubmit = $("bkSubmit");
+const bookForm = $("bookForm");
+
+function bkSay(msg, ok){
+  bkStatus.textContent = msg || "";
+  bkStatus.className = "status " + (msg ? (ok ? "is-good" : "is-bad") : "");
+}
+function flag(el, bad){
+  el.classList.toggle("is-bad", bad);
+  return !bad;
+}
+
+bookForm.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const name    = $("bkName").value.trim();
+  const phone   = $("bkPhone").value.trim();
+  const email   = $("bkEmail").value.trim();
+  const suburb  = $("bkSuburb").value.trim();
+  const dog     = $("bkDog").value.trim();
+  const message = $("bkMessage").value.trim();
+
+  const okName  = flag($("bkName"), !name);
+  const okPhone = flag($("bkPhone"), !phone);
+  if (!okName || !okPhone) {
+    bkSay("I need a name and a number to get back to you.", false);
+    return;
+  }
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    flag($("bkEmail"), true);
+    bkSay("That email address doesn't look right — or just leave it blank.", false);
+    return;
+  }
+  flag($("bkEmail"), false);
+
+  if (!sendBooking) {
+    bkSay("I can't reach the booking system right now. Ring or text me on 022 451 7725 and I'll sort it.", false);
+    return;
+  }
+
+  bkSubmit.disabled = true;
+  bkSay("Sending…", true);
+  try {
+    await sendBooking({
+      name, phone, email, suburb, dog, message,
+      status: "new"               // the rules will not accept anything else
+    });
+    bookForm.reset();
+    bkSay("Thanks " + name + " — that's with me. I'll be in touch, usually the same day.", true);
+    bkSubmit.textContent = "Sent";
+  } catch (err) {
+    console.error(err);
+    bkSay("That didn't send. Give me a ring on 022 451 7725 and I'll sort it.", false);
+    bkSubmit.disabled = false;
+  }
+});
+
 function demoMode(reason){
   paint(SEED, { flag: "Example" });
   submitBtn.disabled = true;
@@ -1194,6 +1350,10 @@ if (!isConfigured) {
 
     const db = getFirestore(initializeApp(firebaseConfig));
     const dogs = collection(db, "dogs");
+    const bookings = collection(db, "bookings");
+
+    // the booking form is already listening; give it a working sender
+    sendBooking = (data) => addDoc(bookings, { ...data, created: serverTimestamp() });
 
     async function loadApproved(){
       // This filter is not optional: firestore.rules only permits reads of
@@ -1233,7 +1393,7 @@ if (!isConfigured) {
         pendingPhoto = null;
         dropInner.innerHTML =
           '<svg><use href="#camera"/></svg><b>Choose a photo</b><small>JPG or PNG, up to about 10 MB</small>';
-        setStatus("Thanks — " + name + " is with us for approval and will appear shortly.", true);
+        setStatus("Thanks — " + name + " is with me for approval and will appear shortly.", true);
       } catch (err) {
         console.error(err);
         setStatus("That didn't send. Check your connection and try again.", false);
