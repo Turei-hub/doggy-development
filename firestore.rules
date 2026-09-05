@@ -10,7 +10,8 @@ rules_version = '2';
 //   - the public can only ever CREATE dogs whose status is "pending"
 //   - only the admin can change a status, edit, or delete
 //
-// Set ADMIN_UIDS below to your own Firebase Auth UID — SETUP.md step 5.
+// The UID below is the owner's Google account. To add a second admin later,
+// add their UID to the list and redeploy the rules.
 
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -18,7 +19,7 @@ service cloud.firestore {
     function isAdmin() {
       return request.auth != null
           && request.auth.uid in [
-               'PASTE_YOUR_FIREBASE_UID_HERE'
+               's2lHLoXv0yVxsLph8rG49QvtLqH3'
              ];
     }
 
