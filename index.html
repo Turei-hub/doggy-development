@@ -309,6 +309,11 @@ button,input,textarea,select{font:inherit;color:inherit}
 .drop small{color:var(--ink-2);font-size:.8rem}
 .drop img{width:100%;border-radius:var(--r-s);aspect-ratio:4/3;object-fit:cover}
 .form-note{font-size:.78rem;color:var(--ink-2);line-height:1.45}
+.consent{display:flex;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--ink-2);line-height:1.45;cursor:pointer}
+.consent input{margin:2px 0 0;flex:none;width:16px;height:16px;accent-color:var(--accent)}
+.grid-note{grid-column:1/-1;color:var(--ink-2);font-size:.95rem;padding:8px 2px}
+.dog__pic img{opacity:0;transition:opacity .3s}
+.dog__pic img.is-loaded{opacity:1}
 .status{font-size:.85rem;font-weight:500;padding:9px 12px;border-radius:var(--r-s);display:none}
 .status.is-good{display:block;background:var(--accent-soft);color:var(--accent-deep)}
 .status.is-bad{display:block;background:var(--warm-soft);color:var(--warm)}
@@ -539,15 +544,15 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
           <b>6 dogs</b>
           <span>Max per group walk</span>
         </div>
-        <div class="tile tile--wide tile--a">
+        <div class="tile tile--wide tile--a" data-tile="0">
           <svg class="tile__paw"><use href="#paw"/></svg>
           <span class="tile__tag">Milford Beach <em>7:20am</em></span>
         </div>
-        <div class="tile tile--b">
+        <div class="tile tile--b" data-tile="1">
           <svg class="tile__paw"><use href="#paw"/></svg>
           <span class="tile__tag">Ruby <em>Kelpie</em></span>
         </div>
-        <div class="tile tile--c">
+        <div class="tile tile--c" data-tile="2">
           <svg class="tile__paw"><use href="#paw"/></svg>
           <span class="tile__tag">Tama <em>Huntaway</em></span>
         </div>
@@ -663,9 +668,14 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
           <textarea id="dogStory" maxlength="320" placeholder="Where they came from, what they love, what they'd do all day if they could."></textarea>
         </div>
 
+        <label class="consent">
+          <input type="checkbox" id="dogConsent" required>
+          <span>I'm happy for this photo and story to appear publicly on the Doggy Development website.</span>
+        </label>
+
         <p class="status" id="status" role="status"></p>
-        <button class="btn btn--primary" type="submit">Add to the gallery</button>
-        <p class="form-note">Wireframe note: uploads are saved in this browser only, so you can test the flow. A live site would send them to the business for approval before they appear publicly.</p>
+        <button class="btn btn--primary" type="submit" id="submitBtn">Send to the gallery</button>
+        <p class="form-note">Submissions are checked before they go up — nothing appears on the site until we've approved it, usually within a day.</p>
       </form>
 
       <div>
@@ -953,145 +963,274 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
   }
   window.addEventListener("hashchange", render);
 
-  /* ─────────  GALLERY  ───────── */
-  var KEY = "dd_gallery_v1";
-  var SEED = [
-    { name:"Ruby",  where:"Kelpie · Milford",            story:"Came off a Waikato farm at two and took about a week to decide that Milford Beach beats sheep. Will fetch until her legs give out, then sulk in the car.", seed:true },
-    { name:"Tama",  where:"Huntaway · Devonport",        story:"The loudest dog on the round and the gentlest. Knows every gate on the Devonport waterfront and stops at each one to check for crabs.", seed:true },
-    { name:"Pippa", where:"Cavoodle · Takapuna",         story:"Eleven kilos of opinion. Rescued at nine months, terrified of the vacuum, entirely unbothered by traffic, thunder, or larger dogs.", seed:true },
-    { name:"Kōwhai",where:"Labrador · Castor Bay",       story:"Named for the tree she dug up as a puppy. Retired assistance-dog washout who found her calling as the group's unofficial welcoming committee.", seed:true },
-    { name:"Moss",  where:"Border Collie · Long Bay",    story:"Herds the other dogs into a tidy line whether they want it or not. Needs the ninety-minute adventure walk or he reorganises the lounge.", seed:true },
-    { name:"Bo",    where:"Staffy cross · Birkenhead",   story:"Twelve years old, three legs, and still first to the door when the lead comes out. Does a slow loop of the reserve and sleeps for six hours after.", seed:true }
-  ];
-
-  function load(){
-    try {
-      var raw = localStorage.getItem(KEY);
-      if (raw) return JSON.parse(raw);
-    } catch(e){}
-    return [];
-  }
-  function save(list){
-    try {
-      localStorage.setItem(KEY, JSON.stringify(list));
-      return true;
-    } catch(e){ return false; }
-  }
-
-  var mine = load();
-  var grid = document.getElementById("dogGrid");
-
-  function cardHTML(d){
-    var el = document.createElement("article");
-    el.className = "dog" + (d.seed ? "" : " dog--mine");
-    var pic = d.photo
-      ? '<img src="' + d.photo + '" alt="' + esc(d.name) + '">'
-      : '<svg><use href="#paw"/></svg>';
-    el.innerHTML =
-      '<div class="dog__pic">' + pic +
-        '<span class="dog__flag">' + (d.seed ? "Example" : "Added by you") + '</span>' +
-      '</div>' +
-      '<div class="dog__body">' +
-        '<span class="dog__name">' + esc(d.name) + '</span>' +
-        (d.where ? '<span class="dog__where">' + esc(d.where) + '</span>' : '') +
-        (d.story ? '<p class="dog__story">' + esc(d.story) + '</p>' : '') +
-      '</div>';
-    return el;
-  }
-  function esc(s){
-    return String(s == null ? "" : s)
-      .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
-      .replace(/"/g,"&quot;");
-  }
-  function paint(){
-    grid.textContent = "";
-    mine.concat(SEED).forEach(function(d){ grid.appendChild(cardHTML(d)); });
-  }
-  paint();
-
-  /* photo picking + downscale */
-  var photoInput = document.getElementById("photo");
-  var drop = document.getElementById("drop");
-  var dropInner = document.getElementById("dropInner");
-  var pendingPhoto = null;
-
-  function setStatus(msg, ok){
-    var s = document.getElementById("status");
-    s.textContent = msg;
-    s.className = "status " + (msg ? (ok ? "is-good" : "is-bad") : "");
-  }
-
-  function downscale(file, cb){
-    var reader = new FileReader();
-    reader.onload = function(){
-      var img = new Image();
-      img.onload = function(){
-        var max = 900;
-        var w = img.width, h = img.height;
-        var scale = Math.min(1, max / Math.max(w, h));
-        var c = document.createElement("canvas");
-        c.width  = Math.max(1, Math.round(w * scale));
-        c.height = Math.max(1, Math.round(h * scale));
-        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
-        try { cb(c.toDataURL("image/jpeg", 0.72)); }
-        catch(e){ cb(null); }
-      };
-      img.onerror = function(){ cb(null); };
-      img.src = reader.result;
-    };
-    reader.onerror = function(){ cb(null); };
-    reader.readAsDataURL(file);
-  }
-
-  function handleFile(file){
-    if (!file || !/^image\//.test(file.type)) {
-      setStatus("That file isn't an image — pick a JPG or PNG.", false);
-      return;
-    }
-    setStatus("Preparing photo…", true);
-    downscale(file, function(dataUrl){
-      if (!dataUrl){ setStatus("Couldn't read that photo. Try another one.", false); return; }
-      pendingPhoto = dataUrl;
-      dropInner.innerHTML = '<img src="' + dataUrl + '" alt="Selected photo"><small>Click to choose a different photo</small>';
-      setStatus("", true);
-    });
-  }
-
-  photoInput.addEventListener("change", function(){ handleFile(this.files[0]); });
-  ["dragenter","dragover"].forEach(function(t){
-    drop.addEventListener(t, function(e){ e.preventDefault(); drop.classList.add("is-over"); });
-  });
-  ["dragleave","drop"].forEach(function(t){
-    drop.addEventListener(t, function(e){ e.preventDefault(); drop.classList.remove("is-over"); });
-  });
-  drop.addEventListener("drop", function(e){
-    if (e.dataTransfer && e.dataTransfer.files) handleFile(e.dataTransfer.files[0]);
-  });
-
-  document.getElementById("uploadForm").addEventListener("submit", function(e){
-    e.preventDefault();
-    var name  = document.getElementById("dogName").value.trim();
-    var where = document.getElementById("dogWhere").value.trim();
-    var story = document.getElementById("dogStory").value.trim();
-    if (!name){ setStatus("Your dog needs a name to join the gallery.", false); return; }
-
-    var entry = { name:name, where:where, story:story, photo:pendingPhoto, seed:false };
-    mine.unshift(entry);
-    var stored = save(mine);
-    paint();
-
-    document.getElementById("uploadForm").reset();
-    pendingPhoto = null;
-    dropInner.innerHTML = '<svg><use href="#camera"/></svg><b>Choose a photo</b><small>JPG or PNG, up to about 10 MB</small>';
-    setStatus(
-      stored ? name + " is in the gallery." : name + " is showing, but this browser is out of storage — it won't survive a refresh.",
-      stored
-    );
-    grid.firstChild && grid.firstChild.scrollIntoView({ block:"nearest", behavior:"smooth" });
-  });
-
   render();
 })();
+</script>
+
+<!-- ═══════════════  GALLERY (Firestore)  ═══════════════ -->
+<script type="module">
+import { firebaseConfig, isConfigured } from "./firebase-config.js";
+
+const SDK = "https://www.gstatic.com/firebasejs/12.18.0";
+const MAX_PHOTO = 200000;   // aim small; firestore.rules refuses anything over 400000
+const PHOTO_OK  = /^data:image\/(jpeg|png|webp);base64,/;
+
+/* Example dogs. Shown only until real approved dogs exist, so the page is
+   never empty on day one. */
+const SEED = [
+  { name:"Ruby",   where:"Kelpie · Milford",          story:"Came off a Waikato farm at two and took about a week to decide that Milford Beach beats sheep. Will fetch until her legs give out, then sulk in the car." },
+  { name:"Tama",   where:"Huntaway · Devonport",      story:"The loudest dog on the round and the gentlest. Knows every gate on the Devonport waterfront and stops at each one to check for crabs." },
+  { name:"Pippa",  where:"Cavoodle · Takapuna",       story:"Eleven kilos of opinion. Rescued at nine months, terrified of the vacuum, entirely unbothered by traffic, thunder, or larger dogs." },
+  { name:"Kōwhai", where:"Labrador · Castor Bay",     story:"Named for the tree she dug up as a puppy. Retired assistance-dog washout who found her calling as the group's unofficial welcoming committee." },
+  { name:"Moss",   where:"Border Collie · Long Bay",  story:"Herds the other dogs into a tidy line whether they want it or not. Needs the ninety-minute adventure walk or he reorganises the lounge." },
+  { name:"Bo",     where:"Staffy cross · Birkenhead", story:"Twelve years old, three legs, and still first to the door when the lead comes out. Does a slow loop of the reserve and sleeps for six hours after." }
+];
+
+const $ = (id) => document.getElementById(id);
+const grid = $("dogGrid");
+const form = $("uploadForm");
+const submitBtn = $("submitBtn");
+const dropInner = $("dropInner");
+const statusEl = $("status");
+let pendingPhoto = null;
+
+function setStatus(msg, ok){
+  statusEl.textContent = msg || "";
+  statusEl.className = "status " + (msg ? (ok ? "is-good" : "is-bad") : "");
+}
+
+/* ─────────  rendering  ───────── */
+
+function card(d, flag){
+  const el = document.createElement("article");
+  el.className = "dog";
+
+  const pic = document.createElement("div");
+  pic.className = "dog__pic";
+  if (d.photo && PHOTO_OK.test(d.photo)) {
+    const img = document.createElement("img");
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.alt = d.name || "A dog we walk";
+    img.addEventListener("load", () => img.classList.add("is-loaded"));
+    img.src = d.photo;
+    pic.appendChild(img);
+  } else {
+    pic.insertAdjacentHTML("beforeend", '<svg><use href="#paw"/></svg>');
+  }
+  if (flag) {
+    const tag = document.createElement("span");
+    tag.className = "dog__flag";
+    tag.textContent = flag;
+    pic.appendChild(tag);
+  }
+
+  const body = document.createElement("div");
+  body.className = "dog__body";
+  const name = document.createElement("span");
+  name.className = "dog__name";
+  name.textContent = d.name || "";
+  body.appendChild(name);
+  if (d.where) {
+    const w = document.createElement("span");
+    w.className = "dog__where";
+    w.textContent = d.where;
+    body.appendChild(w);
+  }
+  if (d.story) {
+    const s = document.createElement("p");
+    s.className = "dog__story";
+    s.textContent = d.story;
+    body.appendChild(s);
+  }
+
+  el.append(pic, body);
+  return el;
+}
+
+function paint(dogs, { flag = null, note = null } = {}){
+  grid.textContent = "";
+  if (note) {
+    const p = document.createElement("p");
+    p.className = "grid-note";
+    p.textContent = note;
+    grid.appendChild(p);
+  }
+  dogs.forEach(d => grid.appendChild(card(d, flag)));
+}
+
+/* Drop the three newest approved photos into the hero collage. */
+function fillHero(dogs){
+  const withPhotos = dogs.filter(d => d.photo && PHOTO_OK.test(d.photo)).slice(0, 3);
+  withPhotos.forEach((d, i) => {
+    const tile = document.querySelector('[data-tile="' + i + '"]');
+    if (!tile) return;
+    const paw = tile.querySelector(".tile__paw");
+    if (paw) paw.remove();
+    const img = document.createElement("img");
+    img.alt = d.name || "";
+    img.style.cssText = "width:100%;height:100%;object-fit:cover;position:absolute;inset:0";
+    img.src = d.photo;
+    tile.prepend(img);
+    const tag = tile.querySelector(".tile__tag");
+    if (tag) {
+      tag.textContent = d.name || "";
+      if (d.where) {
+        const em = document.createElement("em");
+        em.textContent = " " + d.where.split("·")[0].trim();
+        tag.appendChild(em);
+      }
+    }
+  });
+}
+
+/* ─────────  photo handling  ───────── */
+
+function readImage(file){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error("read failed"));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error("decode failed"));
+      img.onload = () => resolve(img);
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/* Shrink until the data URI fits comfortably inside one Firestore document.
+   Tries progressively smaller sizes and lower quality, then gives up honestly
+   rather than sending something the rules will reject. */
+function compress(img){
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d");
+  for (const maxDim of [800, 700, 600, 480]) {
+    const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+    canvas.width  = Math.max(1, Math.round(img.width  * scale));
+    canvas.height = Math.max(1, Math.round(img.height * scale));
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    for (const q of [0.72, 0.6, 0.5, 0.4, 0.32]) {
+      const url = canvas.toDataURL("image/jpeg", q);
+      if (url.length <= MAX_PHOTO) return url;
+    }
+  }
+  return null;
+}
+
+async function handleFile(file){
+  if (!file) return;
+  if (!/^image\//.test(file.type)) {
+    setStatus("That file isn't an image — pick a JPG or PNG.", false);
+    return;
+  }
+  setStatus("Preparing photo…", true);
+  try {
+    const url = compress(await readImage(file));
+    if (!url) {
+      setStatus("Couldn't get that photo small enough. Try a different one.", false);
+      return;
+    }
+    pendingPhoto = url;
+    dropInner.textContent = "";
+    const preview = document.createElement("img");
+    preview.src = url;
+    preview.alt = "Selected photo";
+    const hint = document.createElement("small");
+    hint.textContent = "Click to choose a different photo";
+    dropInner.append(preview, hint);
+    setStatus("", true);
+  } catch {
+    setStatus("Couldn't read that photo. Try another one.", false);
+  }
+}
+
+/* ─────────  wiring  ───────── */
+
+const photoInput = $("photo");
+const drop = $("drop");
+photoInput.addEventListener("change", function(){ handleFile(this.files[0]); });
+["dragenter","dragover"].forEach(t =>
+  drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add("is-over"); }));
+["dragleave","drop"].forEach(t =>
+  drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove("is-over"); }));
+drop.addEventListener("drop", e => {
+  if (e.dataTransfer && e.dataTransfer.files) handleFile(e.dataTransfer.files[0]);
+});
+
+function demoMode(reason){
+  paint(SEED, { flag: "Example" });
+  submitBtn.disabled = true;
+  submitBtn.style.opacity = ".55";
+  submitBtn.style.cursor = "not-allowed";
+  setStatus(reason, false);
+}
+
+if (!isConfigured) {
+  demoMode("The gallery isn't connected to Firebase yet — see SETUP.md.");
+} else {
+  try {
+    const { initializeApp } = await import(`${SDK}/firebase-app.js`);
+    const {
+      getFirestore, collection, query, where, orderBy, limit,
+      getDocs, addDoc, serverTimestamp
+    } = await import(`${SDK}/firebase-firestore.js`);
+
+    const db = getFirestore(initializeApp(firebaseConfig));
+    const dogs = collection(db, "dogs");
+
+    async function loadApproved(){
+      // This filter is not optional: firestore.rules only permits reads of
+      // approved dogs, so a query without it is refused outright.
+      const snap = await getDocs(query(
+        dogs, where("status", "==", "approved"), orderBy("created", "desc"), limit(60)
+      ));
+      const list = snap.docs.map(d => d.data());
+      if (list.length) { paint(list); fillHero(list); }
+      else paint(SEED, { flag: "Example" });
+    }
+
+    await loadApproved();
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const name  = $("dogName").value.trim();
+      const where_ = $("dogWhere").value.trim();
+      const story = $("dogStory").value.trim();
+
+      if (!name)          { setStatus("Your dog needs a name to join the gallery.", false); return; }
+      if (!pendingPhoto)  { setStatus("Pick a photo of your dog first.", false); return; }
+      if (!$("dogConsent").checked) { setStatus("Please tick the box to say it's okay to publish.", false); return; }
+
+      submitBtn.disabled = true;
+      setStatus("Sending…", true);
+      try {
+        await addDoc(dogs, {
+          name,
+          where: where_,
+          story,
+          photo: pendingPhoto,
+          status: "pending",          // the rules will not accept anything else
+          created: serverTimestamp()
+        });
+        form.reset();
+        pendingPhoto = null;
+        dropInner.innerHTML =
+          '<svg><use href="#camera"/></svg><b>Choose a photo</b><small>JPG or PNG, up to about 10 MB</small>';
+        setStatus("Thanks — " + name + " is with us for approval and will appear shortly.", true);
+      } catch (err) {
+        console.error(err);
+        setStatus("That didn't send. Check your connection and try again.", false);
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    demoMode("The gallery can't be reached right now. Showing examples instead.");
+  }
+}
 </script>
 
 </body>

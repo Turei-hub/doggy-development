@@ -7,29 +7,41 @@ Auckland's North Shore.
 
 | Path | What it is |
 |---|---|
-| `index.html` | The whole website. One self-contained file: no build step, no dependencies, hash-based routing across four pages. |
+| `index.html` | The whole public website. No build step, no dependencies, hash-based routing across four pages. |
+| `admin.html` | The moderation portal. Sign in, approve or reject submitted dogs, add your own. |
+| `firestore.rules` | The security rules. This is what actually guarantees nothing publishes without your say-so. |
+| `firebase-config.js` | Your Firebase project details. Empty until you fill it in — see `SETUP.md`. |
+| `firebase.json`, `firestore.indexes.json` | Hosting and index config for the Firebase CLI. |
+| `SETUP.md` | Step-by-step first-time setup, roughly 20 minutes. |
 | `brand/brand.md` | Colours, type, logo rules, contact details, and the name-availability checks. |
 | `brand/logo-mark-teal.svg` | The "Good Dog" mark, master file. |
 | `brand/logo-concepts.html` | The four logo concepts it was chosen from, with lockups, reversed versions and size tests. |
 
 ## Running it
 
-Open `index.html` in a browser. That's it — there is nothing to install and nothing to build.
-
-To serve it locally:
+The pages use ES modules, so they need to be served over HTTP — opening
+`index.html` straight off the disk won't work.
 
 ```sh
 python3 -m http.server 8000
 # then open http://localhost:8000
 ```
 
+Or, once the Firebase CLI is installed, `firebase serve --only hosting`.
+
+With `firebase-config.js` still empty the site runs in demo mode: the gallery
+shows six example dogs and the upload form explains it isn't connected. Every
+other page works normally.
+
 ## Deploying
 
-The site is static, so any of these will host it as-is:
+**Firebase Hosting** is the natural home, since the gallery already uses
+Firestore — `firebase deploy`, and it's live. Commercial use is fine on the free
+Spark plan.
 
-- **GitHub Pages** — Settings → Pages → deploy from `main`, root folder.
-- **Netlify** — drag the folder in, or connect the repo. No build command; publish directory is the repo root.
-- **Vercel** — import the repo, framework preset "Other", no build command.
+The rest of the site is static, so Netlify or Cloudflare Pages would also serve
+it. Note that **Vercel's Hobby plan is restricted to non-commercial use**, so a
+business site there means the $20/month Pro plan.
 
 ## The pages
 
@@ -38,27 +50,47 @@ The site is static, so any of these will host it as-is:
 3. **Services & Pricing** — three tiers, an add-ons table, five FAQs.
 4. **About** — story, credentials, trading hours, contact.
 
-## Status: this is a working wireframe, not a finished site
+## How the gallery works
 
-Real layouts, real navigation, real contact details. Still to do before it goes live:
+Clients submit a dog on the gallery page. Nothing they send appears anywhere on
+the site until it is approved in `admin.html`.
+
+```
+client submits  →  Firestore doc, status "pending"  →  you approve  →  live
+```
+
+The moderation is enforced by `firestore.rules` on Firebase's servers, not by the
+page's JavaScript. Editing the site in a browser's dev tools, or calling the API
+directly, still can't publish anything or read the pending queue. Specifically,
+the rules allow the public to read only `status == "approved"` documents and to
+create only `status == "pending"` ones, capped at one image under 400 KB plus
+four short text fields. Changing a status is limited to your account's user ID.
+
+Photos are compressed in the browser to well under 150 KB and stored as text
+inside the Firestore document — no Cloud Storage bucket, which keeps everything
+inside the free Spark plan with no credit card attached. Room for something like
+8,000 dogs.
+
+The three newest approved photos also fill the home page hero collage.
+
+`SETUP.md` has the full first-time setup.
+
+## Status: still a wireframe in places
+
+Real layouts, real navigation, real contact details, and a real gallery. Still to
+do before it goes live:
 
 - **Prices are placeholders.** Every rate reads `$00`.
-- **Photos are placeholders.** The hero tiles and empty gallery cards show a paw outline.
+- **Hero photos.** The collage fills itself from approved dogs, but shows paw
+  outlines until there are three.
 - **The About copy is scaffolding** — right shape, not the owner's own words.
-- **The gallery has no backend.** Uploads are downscaled in-browser and stored in
-  `localStorage`, which means they live in one visitor's browser, are visible to nobody
-  else, and vanish when the browser is cleared. It demonstrates the flow; it is not a
-  system.
 
-## Before the gallery goes live — please read
+## On client photos
 
-Letting client photo uploads publish straight to a public page is the single biggest risk
-in this build. It is an open door for anything a stranger wants to post under the
-business's name. A real version needs **storage** (Supabase or similar) **and a moderation
-queue**: approval before publication is not optional.
+The submission form asks for consent with a tick box before it will send. Photos
+you add yourself through the admin page skip that step, so get the client's okay
+before publishing something they texted you.
 
-Separately, get written permission before a customer's dog and story go on a public page,
-even when they submitted it themselves.
 
 ## Notes for whoever builds this properly
 
@@ -69,3 +101,16 @@ even when they submitted it themselves.
 - The logo is an SVG `<symbol>` — a `<mask>` over a solid rect — so it is single-colour
   safe on any background and inherits `currentColor`.
 - Fonts come from Google Fonts; everything else is inline.
+
+## Checking the rules still hold
+
+The moderation promise is worth being able to prove rather than trust.
+`firestore.rules.test.mjs` boots the local Firestore emulator and replays every
+attack and every normal action against the real rules file:
+
+```sh
+npm install
+npm test
+```
+
+Run it after any change to `firestore.rules`. It never touches the live project.

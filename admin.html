@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en-NZ">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gallery admin — Doggy Development</title>
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="brand/logo-mark-teal.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Figtree:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F5F8F6; --surface:#FFFFFF; --surface-2:#EAF1EE;
+  --ink:#0F2420; --ink-2:#4C605B; --line:#D9E4E0; --line-strong:#C2D3CD;
+  --accent:#0F8F80; --accent-deep:#0A6D61; --accent-soft:#D8EEE9;
+  --warm:#D9552A; --warm-soft:#FAE2D8; --on-accent:#FFFFFF;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --body:"Figtree","Segoe UI",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+  --shadow:0 1px 2px rgba(15,36,32,.05), 0 12px 28px -14px rgba(15,36,32,.20);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0C1613; --surface:#14201D; --surface-2:#1B2A26;
+    --ink:#E7F0EC; --ink-2:#9BB0AA; --line:#25332F; --line-strong:#35443F;
+    --accent:#3FC9B6; --accent-deep:#2FA895; --accent-soft:#123531;
+    --warm:#FF8A5C; --warm-soft:#331E16; --on-accent:#06201C;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 28px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0C1613; --surface:#14201D; --surface-2:#1B2A26;
+  --ink:#E7F0EC; --ink-2:#9BB0AA; --line:#25332F; --line-strong:#35443F;
+  --accent:#3FC9B6; --accent-deep:#2FA895; --accent-soft:#123531;
+  --warm:#FF8A5C; --warm-soft:#331E16; --on-accent:#06201C;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 28px -14px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.6}
+h1,h2,h3{font-family:var(--display);font-weight:800;line-height:1.06;letter-spacing:-.025em;margin:0}
+h1{font-size:clamp(1.8rem,4vw,2.6rem)}
+h2{font-size:1.3rem}
+h3{font-size:1.05rem;font-weight:600}
+p{margin:0}
+img{display:block;max-width:100%}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:4px}
+.wrap{max-width:980px;margin-inline:auto;padding:clamp(20px,4vw,40px)}
+
+.top{display:flex;flex-wrap:wrap;gap:14px 20px;align-items:center;justify-content:space-between;
+     padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:11px;text-decoration:none;color:inherit}
+.brand svg{width:36px;height:36px;color:var(--accent);flex:none}
+.brand b{display:block;font-family:var(--display);font-size:1rem;letter-spacing:-.03em;line-height:1}
+.brand span{font-family:var(--mono);font-size:.68rem;text-transform:uppercase;letter-spacing:.13em;color:var(--ink-2)}
+.who{display:flex;align-items:center;gap:12px;font-size:.88rem;color:var(--ink-2)}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 20px;
+     border-radius:999px;border:1px solid transparent;font-weight:600;font-size:.94rem;cursor:pointer;
+     text-decoration:none;transition:background .15s,border-color .15s,opacity .15s}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn--primary{background:var(--accent);color:var(--on-accent)}
+.btn--primary:hover:not(:disabled){background:var(--accent-deep)}
+.btn--ghost{background:transparent;color:var(--ink);border-color:var(--line-strong)}
+.btn--ghost:hover:not(:disabled){border-color:var(--ink)}
+.btn--danger{background:transparent;color:var(--warm);border-color:var(--warm)}
+.btn--danger:hover:not(:disabled){background:var(--warm-soft)}
+.btn--sm{padding:8px 15px;font-size:.87rem}
+
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;box-shadow:var(--shadow)}
+.panel+.panel{margin-top:20px}
+.section-head{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:baseline;margin-bottom:16px}
+.count{font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+       background:var(--accent-soft);color:var(--accent-deep);border-radius:999px;padding:3px 11px}
+:root[data-theme="dark"] .count{color:var(--accent)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .count{color:var(--accent)}}
+.count--warm{background:var(--warm-soft);color:var(--warm)}
+
+.queue{display:flex;flex-direction:column;gap:16px}
+.item{display:grid;grid-template-columns:160px 1fr;gap:18px;align-items:start;
+      border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--ground)}
+@media (max-width:620px){.item{grid-template-columns:1fr}}
+.item img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;background:var(--surface-2)}
+.item__name{font-family:var(--display);font-size:1.15rem;font-weight:700;letter-spacing:-.015em}
+.item__where{font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-2)}
+.item__story{font-size:.93rem;color:var(--ink-2);margin-top:6px}
+.item__when{font-family:var(--mono);font-size:.7rem;color:var(--ink-2);margin-top:8px}
+.item__actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:12px}
+
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.field label{font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--ink-2)}
+.field input[type=text],.field textarea{background:var(--ground);border:1px solid var(--line-strong);
+     border-radius:10px;padding:10px 12px;font-size:.95rem;width:100%}
+.field textarea{resize:vertical;min-height:76px}
+.field input:focus,.field textarea:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
+.drop{border:2px dashed var(--line-strong);border-radius:14px;padding:18px;text-align:center;cursor:pointer;
+      background:var(--ground);display:block;margin-bottom:14px}
+.drop:hover{border-color:var(--accent);background:var(--accent-soft)}
+.drop img{width:100%;max-width:280px;margin-inline:auto;border-radius:10px;aspect-ratio:4/3;object-fit:cover}
+
+.msg{font-size:.9rem;padding:11px 14px;border-radius:10px;margin-bottom:16px;display:none}
+.msg.show{display:block}
+.msg.good{background:var(--accent-soft);color:var(--accent-deep)}
+.msg.bad{background:var(--warm-soft);color:var(--warm)}
+:root[data-theme="dark"] .msg.good{color:var(--accent)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .msg.good{color:var(--accent)}}
+.empty{color:var(--ink-2);font-size:.95rem;padding:10px 0}
+code{font-family:var(--mono);font-size:.85em;background:var(--surface-2);padding:2px 6px;border-radius:5px;
+     word-break:break-all}
+.uid{display:block;margin-top:10px;font-family:var(--mono);font-size:.95rem;
+     background:var(--surface-2);padding:12px 14px;border-radius:10px;word-break:break-all}
+.hide{display:none!important}
+.foot{margin-top:32px;padding-top:18px;border-top:1px solid var(--line);
+      font-family:var(--mono);font-size:.72rem;color:var(--ink-2);display:flex;
+      flex-wrap:wrap;gap:10px;justify-content:space-between}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="logo" viewBox="0 0 100 100">
+    <mask id="logoMask">
+      <rect width="100" height="100" fill="#000"/>
+      <g fill="#fff">
+        <rect x="6" y="24" width="21" height="47" rx="10.5" transform="rotate(-12 16.5 47.5)"/>
+        <rect x="73" y="24" width="21" height="47" rx="10.5" transform="rotate(12 83.5 47.5)"/>
+        <ellipse cx="50" cy="45" rx="29" ry="28"/>
+        <ellipse cx="50" cy="70" rx="18" ry="17"/>
+      </g>
+      <g fill="#000">
+        <circle cx="38.5" cy="41" r="5"/>
+        <circle cx="61.5" cy="41" r="5"/>
+        <ellipse cx="50" cy="63" rx="6.6" ry="5.2"/>
+      </g>
+    </mask>
+    <rect width="100" height="100" fill="currentColor" mask="url(#logoMask)"/>
+  </symbol>
+</svg>
+
+<div class="wrap">
+
+  <div class="top">
+    <a class="brand" href="./">
+      <svg><use href="#logo"/></svg>
+      <span><b>Doggy Development</b><span>Gallery admin</span></span>
+    </a>
+    <div class="who">
+      <span id="whoText"></span>
+      <button class="btn btn--ghost btn--sm hide" id="signOutBtn">Sign out</button>
+    </div>
+  </div>
+
+  <p class="msg" id="msg"></p>
+
+  <!-- not signed in -->
+  <section class="panel" id="signInPanel">
+    <h1>Sign in to review submissions</h1>
+    <p style="color:var(--ink-2);margin:12px 0 20px;max-width:56ch">
+      Use the Google account you set as the admin. Nothing on this page is visible
+      to anyone else — the database itself refuses to hand over pending dogs to
+      anybody but you.
+    </p>
+    <button class="btn btn--primary" id="signInBtn">Sign in with Google</button>
+  </section>
+
+  <!-- signed in but not the admin -->
+  <section class="panel hide" id="notAdminPanel">
+    <h2>This account isn't the admin yet</h2>
+    <p style="color:var(--ink-2);margin:12px 0 4px;max-width:60ch">
+      You're signed in, but the database doesn't recognise this account as the
+      owner. Copy the ID below into <code>firestore.rules</code>, replacing
+      <code>PASTE_YOUR_FIREBASE_UID_HERE</code>, then run
+      <code>firebase deploy --only firestore:rules</code> and reload this page.
+    </p>
+    <code class="uid" id="uidBox"></code>
+  </section>
+
+  <!-- the actual admin -->
+  <div class="hide" id="adminPanels">
+
+    <section class="panel">
+      <div class="section-head">
+        <h2>Waiting for you</h2>
+        <span class="count count--warm" id="pendingCount">0</span>
+      </div>
+      <div class="queue" id="pendingList"></div>
+      <p class="empty hide" id="pendingEmpty">Nothing waiting. The queue is clear.</p>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <h2>Add a dog yourself</h2>
+      </div>
+      <p style="color:var(--ink-2);font-size:.92rem;margin-bottom:16px;max-width:60ch">
+        For photos clients text you. This publishes straight away — make sure
+        you have their okay first.
+      </p>
+      <form id="addForm">
+        <label class="drop" for="addPhoto">
+          <input type="file" id="addPhoto" accept="image/*" hidden>
+          <div id="addDropInner"><b>Choose a photo</b></div>
+        </label>
+        <div class="field">
+          <label for="addName">Dog's name</label>
+          <input type="text" id="addName" maxlength="40" placeholder="Ruby" required>
+        </div>
+        <div class="field">
+          <label for="addWhere">Breed &amp; suburb</label>
+          <input type="text" id="addWhere" maxlength="50" placeholder="Kelpie · Milford">
+        </div>
+        <div class="field">
+          <label for="addStory">Their story</label>
+          <textarea id="addStory" maxlength="320"></textarea>
+        </div>
+        <button class="btn btn--primary" type="submit" id="addBtn">Publish to the gallery</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="section-head">
+        <h2>Live on the site</h2>
+        <span class="count" id="liveCount">0</span>
+      </div>
+      <div class="queue" id="liveList"></div>
+      <p class="empty hide" id="liveEmpty">Nothing published yet.</p>
+    </section>
+
+  </div>
+
+  <div class="foot">
+    <span>Doggy Development · gallery admin</span>
+    <a href="./" style="color:inherit">← Back to the site</a>
+  </div>
+</div>
+
+<script type="module">
+import { firebaseConfig, isConfigured } from "./firebase-config.js";
+
+const SDK = "https://www.gstatic.com/firebasejs/12.18.0";
+const MAX_PHOTO = 200000;   // aim small; firestore.rules refuses anything over 400000
+const PHOTO_OK  = /^data:image\/(jpeg|png|webp);base64,/;
+
+const $ = (id) => document.getElementById(id);
+const msg = $("msg");
+function say(text, ok){
+  msg.textContent = text || "";
+  msg.className = "msg" + (text ? " show " + (ok ? "good" : "bad") : "");
+}
+
+if (!isConfigured) {
+  $("signInPanel").classList.add("hide");
+  say("Firebase isn't configured yet. Fill in firebase-config.js first — see SETUP.md.", false);
+} else {
+
+const { initializeApp } = await import(`${SDK}/firebase-app.js`);
+const {
+  getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
+} = await import(`${SDK}/firebase-auth.js`);
+const {
+  getFirestore, collection, query, where, orderBy, limit,
+  getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp
+} = await import(`${SDK}/firebase-firestore.js`);
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+const dogs = collection(db, "dogs");
+
+/* ─────────  auth  ───────── */
+
+$("signInBtn").addEventListener("click", async () => {
+  try { await signInWithPopup(auth, new GoogleAuthProvider()); }
+  catch (e) { console.error(e); say("Sign-in failed: " + e.code, false); }
+});
+$("signOutBtn").addEventListener("click", () => signOut(auth));
+
+onAuthStateChanged(auth, async (user) => {
+  const signedIn = Boolean(user);
+  $("signInPanel").classList.toggle("hide", signedIn);
+  $("signOutBtn").classList.toggle("hide", !signedIn);
+  $("whoText").textContent = user ? (user.email || "") : "";
+  if (!signedIn) {
+    $("adminPanels").classList.add("hide");
+    $("notAdminPanel").classList.add("hide");
+    say("", true);
+    return;
+  }
+  // The rules are the real test of admin-ness: try to read the pending queue.
+  try {
+    await refresh();
+    $("adminPanels").classList.remove("hide");
+    $("notAdminPanel").classList.add("hide");
+    say("", true);
+  } catch (e) {
+    if (e.code === "permission-denied") {
+      $("uidBox").textContent = user.uid;
+      $("notAdminPanel").classList.remove("hide");
+      $("adminPanels").classList.add("hide");
+      say("", true);
+    } else {
+      console.error(e);
+      say("Couldn't load the gallery: " + (e.code || e.message), false);
+    }
+  }
+});
+
+/* ─────────  rendering  ───────── */
+
+function when(ts){
+  if (!ts || !ts.toDate) return "";
+  return ts.toDate().toLocaleString("en-NZ", {
+    day: "numeric", month: "short", hour: "2-digit", minute: "2-digit"
+  });
+}
+
+function row(id, d, mode){
+  const el = document.createElement("article");
+  el.className = "item";
+
+  const img = document.createElement("img");
+  img.alt = d.name || "";
+  img.loading = "lazy";
+  if (d.photo && PHOTO_OK.test(d.photo)) img.src = d.photo;
+  el.appendChild(img);
+
+  const info = document.createElement("div");
+  const name = document.createElement("div");
+  name.className = "item__name";
+  name.textContent = d.name || "(no name)";
+  info.appendChild(name);
+
+  if (d.where) {
+    const w = document.createElement("div");
+    w.className = "item__where";
+    w.textContent = d.where;
+    info.appendChild(w);
+  }
+  if (d.story) {
+    const s = document.createElement("p");
+    s.className = "item__story";
+    s.textContent = d.story;
+    info.appendChild(s);
+  }
+  const t = document.createElement("div");
+  t.className = "item__when";
+  t.textContent = (mode === "pending" ? "Submitted " : "Published ") + when(d.created);
+  info.appendChild(t);
+
+  const actions = document.createElement("div");
+  actions.className = "item__actions";
+
+  if (mode === "pending") {
+    const ok = document.createElement("button");
+    ok.className = "btn btn--primary btn--sm";
+    ok.textContent = "Approve";
+    ok.addEventListener("click", () => act(ok, () =>
+      updateDoc(doc(db, "dogs", id), { status: "approved" }),
+      `${d.name || "That dog"} is live on the site.`));
+    actions.appendChild(ok);
+  }
+
+  const del = document.createElement("button");
+  del.className = "btn btn--danger btn--sm";
+  del.textContent = mode === "pending" ? "Reject" : "Remove";
+  del.addEventListener("click", () => {
+    if (!confirm(`Delete ${d.name || "this dog"}? This can't be undone.`)) return;
+    act(del, () => deleteDoc(doc(db, "dogs", id)),
+        `${d.name || "That dog"} deleted.`);
+  });
+  actions.appendChild(del);
+
+  info.appendChild(actions);
+  el.appendChild(info);
+  return el;
+}
+
+async function act(btn, fn, okMsg){
+  btn.disabled = true;
+  try { await fn(); say(okMsg, true); await refresh(); }
+  catch (e) { console.error(e); say("That didn't work: " + (e.code || e.message), false); }
+  finally { btn.disabled = false; }
+}
+
+async function fill(status, listEl, emptyEl, countEl, mode){
+  const snap = await getDocs(query(
+    dogs, where("status", "==", status), orderBy("created", "desc"), limit(100)
+  ));
+  listEl.textContent = "";
+  snap.docs.forEach(d => listEl.appendChild(row(d.id, d.data(), mode)));
+  countEl.textContent = String(snap.size);
+  emptyEl.classList.toggle("hide", snap.size > 0);
+}
+
+async function refresh(){
+  await fill("pending", $("pendingList"), $("pendingEmpty"), $("pendingCount"), "pending");
+  await fill("approved", $("liveList"), $("liveEmpty"), $("liveCount"), "live");
+}
+
+/* ─────────  add a dog directly  ───────── */
+
+let addPhoto = null;
+
+function compress(img){
+  const c = document.createElement("canvas");
+  const ctx = c.getContext("2d");
+  for (const maxDim of [800, 700, 600, 480]) {
+    const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+    c.width  = Math.max(1, Math.round(img.width  * scale));
+    c.height = Math.max(1, Math.round(img.height * scale));
+    ctx.drawImage(img, 0, 0, c.width, c.height);
+    for (const q of [0.72, 0.6, 0.5, 0.4, 0.32]) {
+      const url = c.toDataURL("image/jpeg", q);
+      if (url.length <= MAX_PHOTO) return url;
+    }
+  }
+  return null;
+}
+
+$("addPhoto").addEventListener("change", function(){
+  const file = this.files[0];
+  if (!file || !/^image\//.test(file.type)) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const url = compress(img);
+      if (!url) { say("Couldn't get that photo small enough.", false); return; }
+      addPhoto = url;
+      const inner = $("addDropInner");
+      inner.textContent = "";
+      const p = document.createElement("img");
+      p.src = url; p.alt = "Selected photo";
+      inner.appendChild(p);
+      say("", true);
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+$("addForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const name = $("addName").value.trim();
+  if (!name)     { say("Give the dog a name.", false); return; }
+  if (!addPhoto) { say("Pick a photo first.", false); return; }
+  const btn = $("addBtn");
+  btn.disabled = true;
+  try {
+    await addDoc(dogs, {
+      name,
+      where: $("addWhere").value.trim(),
+      story: $("addStory").value.trim(),
+      photo: addPhoto,
+      status: "approved",
+      created: serverTimestamp()
+    });
+    $("addForm").reset();
+    addPhoto = null;
+    $("addDropInner").innerHTML = "<b>Choose a photo</b>";
+    say(name + " is live on the site.", true);
+    await refresh();
+  } catch (err) {
+    console.error(err);
+    say("Couldn't publish: " + (err.code || err.message), false);
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+}  // end: Firebase configured
+</script>
+</body>
+</html>

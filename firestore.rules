@@ -1,0 +1,68 @@
+rules_version = '2';
+
+// Doggy Development — gallery rules
+//
+// The whole moderation guarantee lives in this file. It is enforced by Firebase
+// on the server, so it holds even if someone edits the site's JavaScript in
+// their browser or calls the API directly.
+//
+//   - the public can only ever READ dogs whose status is "approved"
+//   - the public can only ever CREATE dogs whose status is "pending"
+//   - only the admin can change a status, edit, or delete
+//
+// Set ADMIN_UIDS below to your own Firebase Auth UID — SETUP.md step 5.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+          && request.auth.uid in [
+               'PASTE_YOUR_FIREBASE_UID_HERE'
+             ];
+    }
+
+    function isShortString(v, maxLen) {
+      return v is string && v.size() <= maxLen;
+    }
+
+    // A submission from the public form. Deliberately strict: exactly these
+    // fields, nothing else, and always pending.
+    function isValidSubmission(d) {
+      return d.keys().hasOnly(['name','where','story','photo','status','created'])
+          && d.keys().hasAll(['name','photo','status','created'])
+          && d.status == 'pending'
+          && isShortString(d.name, 40)
+          && d.name.size() > 0
+          && isShortString(d.get('where', ''), 50)
+          && isShortString(d.get('story', ''), 320)
+          // photo is a base64 data URI; cap it so nobody can fill the quota
+          && d.photo is string
+          && d.photo.size() > 0
+          && d.photo.size() <= 400000
+          && d.photo.matches('^data:image/(jpeg|png|webp);base64,.*')
+          // stops backdating, and gives the queue a reliable sort order
+          && d.created == request.time;
+    }
+
+    match /dogs/{dogId} {
+
+      // Public reads are limited to approved dogs. Because of this, a client
+      // query MUST include where('status','==','approved') or Firestore
+      // refuses the whole list. The admin can read everything.
+      allow read: if isAdmin() || resource.data.status == 'approved';
+
+      // Anyone may submit a dog, but only ever as pending.
+      allow create: if isValidSubmission(request.resource.data)
+                    || (isAdmin() && request.resource.data.status in ['pending','approved']);
+
+      // Approving, editing and deleting are yours alone.
+      allow update, delete: if isAdmin();
+    }
+
+    // Nothing else in the database is reachable from the web.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
