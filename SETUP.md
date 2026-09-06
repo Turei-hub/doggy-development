@@ -132,32 +132,27 @@ Your site is live at `https://doggy-development.web.app`. Add
 
 ---
 
-## Signing in with a password
+## Who can get into the admin
 
-The admin page takes either Google **or** an email and password. Both land on the
-same Firebase account, so the UID in `firestore.rules` keeps working and nothing
-needs redeploying.
+**Only your Google account.** Sign-in is Google-only — there's no password to
+guess, leak or reuse, and your Google account's own 2FA protects it.
 
-**Turn the provider on, once:**
+Anyone can *load* `/admin`, and anyone with a Google account can press the
+sign-in button. That's fine, and it's worth understanding why: the page itself
+guards nothing. `firestore.rules` does, on Firebase's servers, and it trusts
+exactly one user ID — yours. A stranger who signs in sees "Not authorised" and
+a sign-out button. They cannot read an enquiry, see a pending dog, publish
+anything, or delete anything, no matter what they do to the page in their
+browser.
 
-1. Firebase console → **Security → Authentication → Sign-in method**
-2. Enable **Email/Password**. Leave "Email link (passwordless sign-in)" off.
-3. **Important:** in **Authentication → Settings → User actions**, tick
-   **Prevent new users from signing up**. Otherwise anyone on the internet can
-   create an account on your project. They'd get nothing — the rules only trust
-   your UID — but there's no reason to leave the door open.
+To be thorough you can also close the door on account creation: Firebase console
+→ **Security → Authentication → Settings → User actions** → tick **Prevent new
+users from signing up**. Existing Google accounts can still press the button and
+still get nothing; this just stops new records piling up in your user list.
 
-**Then set your password:**
-
-Sign in to `/admin` with Google as usual. A **Set a password** panel appears at
-the top. Choose something long that you use nowhere else and save it. The panel
-disappears once the password exists, and from then on either method works.
-
-That password is the key to your clients' phone numbers. Treat it accordingly —
-a password manager is the right home for it, not a note on your phone.
-
-If you forget it, **Forgot password** on the sign-in screen emails you a reset
-link, and signing in with Google always works as a way back in.
+**Adding a second admin later:** have them sign in once, get the ID shown on
+their "Not authorised" screen, add it to the list in `firestore.rules`, and run
+`firebase deploy --only firestore:rules`.
 
 ---
 

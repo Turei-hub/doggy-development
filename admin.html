@@ -117,22 +117,7 @@ code{font-family:var(--mono);font-size:.85em;background:var(--surface-2);padding
 .uid{display:block;margin-top:10px;font-family:var(--mono);font-size:.95rem;
      background:var(--surface-2);padding:12px 14px;border-radius:10px;word-break:break-all}
 .hide{display:none!important}
-.signin{max-width:380px}
-.signin .field{margin-bottom:14px}
-.signin input[type=email],.signin input[type=password],
-#setPwForm input[type=password]{
-  background:var(--ground);border:1px solid var(--line-strong);border-radius:10px;
-  padding:10px 12px;font-size:.95rem;width:100%;
-}
-.signin input:focus,#setPwForm input:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
-.signin button+button{margin-left:9px}
-.or{display:flex;align-items:center;gap:14px;margin:22px 0;max-width:380px;
-    font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-2)}
-.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
-.panel--setup{border-color:var(--accent);border-width:2px}
-.reveal{display:flex;align-items:center;gap:9px;margin:-4px 0 16px;font-size:.85rem;
-        color:var(--ink-2);cursor:pointer;user-select:none}
-.reveal input{width:16px;height:16px;accent-color:var(--accent);margin:0}
+
 .foot{margin-top:32px;padding-top:18px;border-top:1px solid var(--line);
       font-family:var(--mono);font-size:.72rem;color:var(--ink-2);display:flex;
       flex-wrap:wrap;gap:10px;justify-content:space-between}
@@ -184,68 +169,29 @@ code{font-family:var(--mono);font-size:.85em;background:var(--surface-2);padding
       stranger who finds this page gets exactly this screen and nothing more.
     </p>
 
-    <form id="pwForm" class="signin" novalidate>
-      <div class="field">
-        <label for="pwEmail">Email</label>
-        <input type="email" id="pwEmail" autocomplete="username" placeholder="milner.turei@gmail.com" required>
-      </div>
-      <div class="field">
-        <label for="pwPass">Password</label>
-        <input type="password" id="pwPass" autocomplete="current-password" required>
-      </div>
-      <label class="reveal"><input type="checkbox" id="showPw"><span>Show password</span></label>
-      <button class="btn btn--primary" type="submit" id="pwBtn">Sign in</button>
-      <button class="btn btn--ghost btn--sm" type="button" id="pwReset">Forgot password</button>
-    </form>
-
-    <div class="or"><span>or</span></div>
-
-    <button class="btn btn--ghost" id="signInBtn">Sign in with Google</button>
+    <button class="btn btn--primary" id="signInBtn">Sign in with Google</button>
   </section>
 
-  <!-- signed in but not the admin -->
+  <!-- signed in, but not an authorised account -->
   <section class="panel hide" id="notAdminPanel">
-    <h2>This account isn't the admin yet</h2>
-    <p style="color:var(--ink-2);margin:12px 0 4px;max-width:60ch">
-      You're signed in, but the database doesn't recognise this account as the
-      owner. Copy the ID below into <code>firestore.rules</code>, replacing
-      <code>PASTE_YOUR_FIREBASE_UID_HERE</code>, then run
-      <code>firebase deploy --only firestore:rules</code> and reload this page.
+    <h2>Not authorised</h2>
+    <p style="color:var(--ink-2);margin:12px 0 20px;max-width:60ch">
+      This account can't access Doggy Development's admin. If you've reached this
+      page by accident, there's nothing here for you — please sign out.
     </p>
-    <code class="uid" id="uidBox"></code>
+    <button class="btn btn--ghost" id="notAdminSignOut">Sign out</button>
+    <details style="margin-top:22px">
+      <summary style="cursor:pointer;color:var(--ink-2);font-size:.86rem">Owner: adding another admin</summary>
+      <p style="color:var(--ink-2);font-size:.86rem;margin:12px 0 0;max-width:60ch">
+        Add the ID below to the list in <code>firestore.rules</code>, then run
+        <code>firebase deploy --only firestore:rules</code>.
+      </p>
+      <code class="uid" id="uidBox"></code>
+    </details>
   </section>
 
   <!-- the actual admin -->
   <div class="hide" id="adminPanels">
-
-    <!-- shown only until a password exists on the account -->
-    <section class="panel panel--setup hide" id="setPwPanel">
-      <div class="section-head">
-        <h2>Set a password</h2>
-      </div>
-      <p style="color:var(--ink-2);margin-bottom:16px;max-width:62ch">
-        You're signed in with Google. Add a password and you'll be able to sign in
-        either way — it attaches to this same account, so nothing else changes and
-        the security rules stay as they are. Handy on a phone, where the Google
-        popup sometimes gets blocked.
-      </p>
-      <form id="setPwForm" novalidate style="max-width:380px">
-        <div class="field">
-          <label for="newPw">New password</label>
-          <input type="password" id="newPw" autocomplete="new-password" minlength="10" required>
-        </div>
-        <div class="field">
-          <label for="newPw2">Type it again</label>
-          <input type="password" id="newPw2" autocomplete="new-password" required>
-        </div>
-        <label class="reveal"><input type="checkbox" id="showNewPw"><span>Show what I've typed</span></label>
-        <button class="btn btn--primary" type="submit" id="setPwBtn">Save password</button>
-      </form>
-      <p style="color:var(--ink-2);font-size:.85rem;margin-top:14px;max-width:62ch">
-        Use something long that you don't use anywhere else. This is the key to
-        your clients' phone numbers.
-      </p>
-    </section>
 
     <section class="panel">
       <div class="section-head">
@@ -341,17 +287,6 @@ function say(text, ok){
 document.querySelectorAll("form").forEach(f =>
   f.addEventListener("submit", e => e.preventDefault()));
 
-/* Showing a password is pure UI. It has to work even if the SDK never arrives,
-   because that is exactly when you want to see what you typed. */
-function wireReveal(toggleId, fieldIds){
-  const t = $(toggleId);
-  if (!t) return;
-  t.addEventListener("change", () => {
-    fieldIds.forEach(id => { const f = $(id); if (f) f.type = t.checked ? "text" : "password"; });
-  });
-}
-wireReveal("showPw", ["pwPass"]);
-wireReveal("showNewPw", ["newPw", "newPw2"]);
 
 if (!isConfigured) {
   $("signInPanel").classList.add("hide");
@@ -362,8 +297,6 @@ if (!isConfigured) {
    say so rather than sitting there with buttons that quietly do nothing. */
 let initializeApp,
     getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged,
-    signInWithEmailAndPassword, sendPasswordResetEmail,
-    EmailAuthProvider, linkWithCredential, updatePassword,
     getFirestore, collection, query, where, orderBy, limit,
     getDocs, addDoc, updateDoc, deleteDoc, doc, serverTimestamp;
 let sdkReady = true;
@@ -371,9 +304,7 @@ let sdkReady = true;
 try {
   ({ initializeApp } = await import(`${SDK}/firebase-app.js`));
   ({
-    getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged,
-    signInWithEmailAndPassword, sendPasswordResetEmail,
-    EmailAuthProvider, linkWithCredential, updatePassword
+    getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged
   } = await import(`${SDK}/firebase-auth.js`));
   ({
     getFirestore, collection, query, where, orderBy, limit,
@@ -386,7 +317,7 @@ try {
 
 if (!sdkReady) {
   say("Couldn't reach Firebase. Check your connection and reload the page.", false);
-  ["pwBtn", "pwReset", "signInBtn"].forEach(id => {
+  ["signInBtn"].forEach(id => {
     const b = $(id); if (b) b.disabled = true;
   });
 } else {
@@ -404,82 +335,8 @@ $("signInBtn").addEventListener("click", async () => {
   catch (e) { console.error(e); say("Sign-in failed: " + e.code, false); }
 });
 
-/* ─────────  email + password  ─────────
-   Both routes land on the same Firebase account, so the UID in
-   firestore.rules keeps working and nothing needs redeploying. */
-
-const AUTH_MESSAGES = {
-  "auth/invalid-credential": "That email and password don't match.",
-  "auth/wrong-password":     "That email and password don't match.",
-  "auth/user-not-found":     "That email and password don't match.",
-  "auth/invalid-email":      "That doesn't look like an email address.",
-  "auth/too-many-requests":  "Too many attempts. Wait a minute and try again.",
-  "auth/network-request-failed": "No connection. Check your internet and try again.",
-  "auth/weak-password":      "Too short — use at least 10 characters.",
-  "auth/requires-recent-login": "For safety, sign in with Google again first, then set the password."
-};
-const authMsg = (e) => AUTH_MESSAGES[e.code] || ("Something went wrong: " + (e.code || e.message));
-
-$("pwForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const email = $("pwEmail").value.trim();
-  const pass  = $("pwPass").value;
-  if (!email || !pass) { say("Enter your email and password.", false); return; }
-  const btn = $("pwBtn");
-  btn.disabled = true;
-  try {
-    await signInWithEmailAndPassword(auth, email, pass);
-    $("pwPass").value = "";
-    say("", true);
-  } catch (err) {
-    console.error(err);
-    say(authMsg(err), false);
-  } finally { btn.disabled = false; }
-});
-
-$("pwReset").addEventListener("click", async () => {
-  const email = $("pwEmail").value.trim();
-  if (!email) { say("Type your email address first, then press Forgot password.", false); return; }
-  try {
-    await sendPasswordResetEmail(auth, email);
-    say("If that address has an account, a reset link is on its way.", true);
-  } catch (err) {
-    console.error(err);
-    // deliberately vague: don't confirm whether an address has an account
-    say("If that address has an account, a reset link is on its way.", true);
-  }
-});
-
-/* Attach a password to the account already signed in with Google. */
-$("setPwForm").addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const a = $("newPw").value, b = $("newPw2").value;
-  if (a.length < 10) { say("Use at least 10 characters.", false); return; }
-  if (a !== b) {
-    // Nearly always a password manager filling one box while you type the other.
-    say("Those two boxes don't match. Tick \u201cShow what I\u2019ve typed\u201d to see both — "
-      + "a password manager may have filled one of them for you.", false);
-    return;
-  }
-  const btn = $("setPwBtn");
-  btn.disabled = true;
-  try {
-    const user = auth.currentUser;
-    const hasPassword = user.providerData.some(p => p.providerId === "password");
-    if (hasPassword) {
-      await updatePassword(user, a);
-    } else {
-      await linkWithCredential(user, EmailAuthProvider.credential(user.email, a));
-    }
-    $("setPwForm").reset();
-    $("setPwPanel").classList.add("hide");
-    say("Password saved. You can now sign in with " + user.email + " and that password.", true);
-  } catch (err) {
-    console.error(err);
-    say(authMsg(err), false);
-  } finally { btn.disabled = false; }
-});
 $("signOutBtn").addEventListener("click", () => signOut(auth));
+$("notAdminSignOut").addEventListener("click", () => signOut(auth));
 
 onAuthStateChanged(auth, async (user) => {
   const signedIn = Boolean(user);
@@ -497,9 +354,6 @@ onAuthStateChanged(auth, async (user) => {
     await refresh();
     $("adminPanels").classList.remove("hide");
     $("notAdminPanel").classList.add("hide");
-    // offer to set a password only if this account hasn't got one
-    const hasPassword = user.providerData.some(p => p.providerId === "password");
-    $("setPwPanel").classList.toggle("hide", hasPassword);
     say("", true);
   } catch (e) {
     if (e.code === "permission-denied") {
