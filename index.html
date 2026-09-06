@@ -236,6 +236,17 @@ button,input,textarea,select{font:inherit;color:inherit}
   .hero__badge{top:-14px;right:0}
 }
 
+/* No photos yet: one centred column instead of a lopsided half-empty hero.
+   The collage returns on its own once three approved dogs have photos. */
+.collage[hidden]{display:none}
+.hero__grid.is-solo{grid-template-columns:1fr;justify-items:center;text-align:center}
+.hero__grid.is-solo .hero__copy{align-items:center;max-width:none;width:100%}
+.hero__grid.is-solo .hero__title{max-width:15ch;margin-inline:auto}
+.hero__grid.is-solo .hero__actions,
+.hero__grid.is-solo .trustline{justify-content:center}
+.hero__grid.is-solo .lede{max-width:52ch}
+.hero__grid.is-solo .hero__title{font-size:clamp(2.8rem,7vw,4.8rem)}
+
 /* ─────────────────────────  MARQUEE  ───────────────────────── */
 .marquee{
   background:var(--accent);color:var(--on-accent);
@@ -566,7 +577,7 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
 <!-- ═══════════════  HOME  ═══════════════ -->
 <section class="page" id="page-home">
   <div class="wrap hero">
-    <div class="hero__grid">
+    <div class="hero__grid is-solo" id="heroGrid">
       <div class="hero__copy">
         <p class="eyebrow">Dog walking · Auckland North Shore</p>
         <h1 class="hero__title">Your dog's <span>best hour</span> of the day.</h1>
@@ -582,7 +593,7 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
         </div>
       </div>
 
-      <div class="collage">
+      <div class="collage" id="collage" hidden>
         <div class="hero__badge">
           <b>6 dogs</b>
           <span>Max per group walk</span>
@@ -1165,6 +1176,14 @@ function paint(dogs, { flag = null, note = null } = {}){
 /* Drop the three newest approved photos into the hero collage. */
 function fillHero(dogs){
   const withPhotos = dogs.filter(d => d.photo && PHOTO_OK.test(d.photo)).slice(0, 3);
+
+  // The collage is a three-tile composition. With one or two photos it would
+  // sit there half-empty with paw placeholders, which looks worse than not
+  // having it — so the hero stays single-column until there are three.
+  if (withPhotos.length < 3) return;
+  $("collage").hidden = false;
+  $("heroGrid").classList.remove("is-solo");
+
   withPhotos.forEach((d, i) => {
     const tile = document.querySelector('[data-tile="' + i + '"]');
     if (!tile) return;

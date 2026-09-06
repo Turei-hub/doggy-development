@@ -71,7 +71,11 @@ inside the Firestore document — no Cloud Storage bucket, which keeps everythin
 inside the free Spark plan with no credit card attached. Room for something like
 8,000 dogs.
 
-The three newest approved photos also fill the home page hero collage.
+The three newest approved photos also fill the home page hero collage — but
+only once there are three. Below that the hero renders as a single centred
+column instead, because a three-tile composition sitting half-empty with paw
+placeholders looks worse than no photos at all. Approve a third dog and the
+collage appears on its own; nothing needs changing in the code.
 
 `SETUP.md` has the full first-time setup.
 
