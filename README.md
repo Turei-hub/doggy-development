@@ -30,7 +30,7 @@ python3 -m http.server 8000
 Or, once the Firebase CLI is installed, `firebase serve --only hosting`.
 
 With `firebase-config.js` still empty the site runs in demo mode: the gallery
-shows six example dogs and the upload form explains it isn't connected. Every
+shows its empty state and the upload form explains it isn't connected. Every
 other page works normally.
 
 ## Deploying
@@ -46,7 +46,7 @@ business site there means the $20/month Pro plan.
 ## The pages
 
 1. **Home** — hero with a photo-tile collage and a "6 dogs max" badge, sliding marquee, three service cards, the suburb list, gallery CTA.
-2. **Gallery** — clients add their dog with a photo, name, breed/suburb and story.
+2. **Gallery** — clients add their dog with a photo, name, breed/suburb and story. Empty until the first dog is approved.
 3. **Services & Pricing** — three tiers, an add-ons table, five FAQs.
 4. **About** — story, credentials, trading hours, contact.
 
