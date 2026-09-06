@@ -478,6 +478,8 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
 .foot__col a{color:var(--ink-2);text-decoration:none;width:fit-content}
 .foot__col a:hover{color:var(--accent)}
 .foot__bar{border-top:1px solid var(--line);padding-block:18px;display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;font-family:var(--mono);font-size:.74rem;color:var(--ink-2)}
+.foot__admin{color:var(--ink-2);text-decoration:none;opacity:.75;transition:opacity .15s,color .15s}
+.foot__admin:hover{opacity:1;color:var(--accent)}
 
 .page{display:none}
 .page.is-active{display:block}
@@ -978,8 +980,8 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
       </div>
     </div>
     <div class="foot__bar">
-      <span>© <span data-brand>Doggy Development</span> — wireframe</span>
-      <span>Placeholder content for review</span>
+      <span>© <span data-year>2026</span> <span data-brand>Doggy Development</span> · Auckland North Shore</span>
+      <span><a class="foot__admin" href="admin.html" rel="nofollow noreferrer">Admin</a></span>
     </div>
   </div>
 </footer>
@@ -993,6 +995,9 @@ details.faq p{padding:0 0 18px;color:var(--ink-2);font-size:.97rem;max-width:68c
   var words = BRAND.split(/\s+/);
   var lineOne = words.shift();
   var lineTwo = words.join(" ");
+  var yearEl = document.querySelector("[data-year]");
+  if (yearEl) yearEl.textContent = String(new Date().getFullYear());
+
   document.querySelectorAll("[data-brand]").forEach(function(el){
     if (!el.hasAttribute("data-brand-stack")){ el.textContent = BRAND; return; }
     el.textContent = "";

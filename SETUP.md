@@ -132,6 +132,35 @@ Your site is live at `https://doggy-development.web.app`. Add
 
 ---
 
+## Signing in with a password
+
+The admin page takes either Google **or** an email and password. Both land on the
+same Firebase account, so the UID in `firestore.rules` keeps working and nothing
+needs redeploying.
+
+**Turn the provider on, once:**
+
+1. Firebase console → **Security → Authentication → Sign-in method**
+2. Enable **Email/Password**. Leave "Email link (passwordless sign-in)" off.
+3. **Important:** in **Authentication → Settings → User actions**, tick
+   **Prevent new users from signing up**. Otherwise anyone on the internet can
+   create an account on your project. They'd get nothing — the rules only trust
+   your UID — but there's no reason to leave the door open.
+
+**Then set your password:**
+
+Sign in to `/admin` with Google as usual. A **Set a password** panel appears at
+the top. Choose something long that you use nowhere else and save it. The panel
+disappears once the password exists, and from then on either method works.
+
+That password is the key to your clients' phone numbers. Treat it accordingly —
+a password manager is the right home for it, not a note on your phone.
+
+If you forget it, **Forgot password** on the sign-in screen emails you a reset
+link, and signing in with Google always works as a way back in.
+
+---
+
 ## Using it
 
 **`/admin.html`** is the whole job. Bookmark it on your phone.
