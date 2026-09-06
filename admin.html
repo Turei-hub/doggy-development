@@ -130,6 +130,9 @@ code{font-family:var(--mono);font-size:.85em;background:var(--surface-2);padding
     font-family:var(--mono);font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--ink-2)}
 .or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
 .panel--setup{border-color:var(--accent);border-width:2px}
+.reveal{display:flex;align-items:center;gap:9px;margin:-4px 0 16px;font-size:.85rem;
+        color:var(--ink-2);cursor:pointer;user-select:none}
+.reveal input{width:16px;height:16px;accent-color:var(--accent);margin:0}
 .foot{margin-top:32px;padding-top:18px;border-top:1px solid var(--line);
       font-family:var(--mono);font-size:.72rem;color:var(--ink-2);display:flex;
       flex-wrap:wrap;gap:10px;justify-content:space-between}
@@ -190,6 +193,7 @@ code{font-family:var(--mono);font-size:.85em;background:var(--surface-2);padding
         <label for="pwPass">Password</label>
         <input type="password" id="pwPass" autocomplete="current-password" required>
       </div>
+      <label class="reveal"><input type="checkbox" id="showPw"><span>Show password</span></label>
       <button class="btn btn--primary" type="submit" id="pwBtn">Sign in</button>
       <button class="btn btn--ghost btn--sm" type="button" id="pwReset">Forgot password</button>
     </form>
@@ -234,6 +238,7 @@ code{font-family:var(--mono);font-size:.85em;background:var(--surface-2);padding
           <label for="newPw2">Type it again</label>
           <input type="password" id="newPw2" autocomplete="new-password" required>
         </div>
+        <label class="reveal"><input type="checkbox" id="showNewPw"><span>Show what I've typed</span></label>
         <button class="btn btn--primary" type="submit" id="setPwBtn">Save password</button>
       </form>
       <p style="color:var(--ink-2);font-size:.85rem;margin-top:14px;max-width:62ch">
@@ -328,6 +333,25 @@ function say(text, ok){
   msg.textContent = text || "";
   msg.className = "msg" + (text ? " show " + (ok ? "good" : "bad") : "");
 }
+
+/* Nothing below this point may depend on Firebase loading. A form with no
+   submit handler does a native GET submit, which reloads the page and throws
+   away whatever was typed — so every form gets its default stopped up front,
+   whatever else does or doesn't load. */
+document.querySelectorAll("form").forEach(f =>
+  f.addEventListener("submit", e => e.preventDefault()));
+
+/* Showing a password is pure UI. It has to work even if the SDK never arrives,
+   because that is exactly when you want to see what you typed. */
+function wireReveal(toggleId, fieldIds){
+  const t = $(toggleId);
+  if (!t) return;
+  t.addEventListener("change", () => {
+    fieldIds.forEach(id => { const f = $(id); if (f) f.type = t.checked ? "text" : "password"; });
+  });
+}
+wireReveal("showPw", ["pwPass"]);
+wireReveal("showNewPw", ["newPw", "newPw2"]);
 
 if (!isConfigured) {
   $("signInPanel").classList.add("hide");
@@ -431,7 +455,12 @@ $("setPwForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const a = $("newPw").value, b = $("newPw2").value;
   if (a.length < 10) { say("Use at least 10 characters.", false); return; }
-  if (a !== b)       { say("Those two passwords don't match.", false); return; }
+  if (a !== b) {
+    // Nearly always a password manager filling one box while you type the other.
+    say("Those two boxes don't match. Tick \u201cShow what I\u2019ve typed\u201d to see both — "
+      + "a password manager may have filled one of them for you.", false);
+    return;
+  }
   const btn = $("setPwBtn");
   btn.disabled = true;
   try {
